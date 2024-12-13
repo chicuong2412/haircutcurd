@@ -1,0 +1,65 @@
+// https://bit.ly/3aI9YSD - universal box-sizing with inheritance.
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Roboto:wght@400;700&display=swap');
+
+html {
+  box-sizing: border-box;
+}
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+:root {
+  --colorBrown: rgb(145, 118, 90);
+  --grayText: #ABAED0;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+
+  // https://mzl.la/2KnTfHh
+  // size/line-height | family
+  font: 16px "Outfit", sans-serif !important;
+}
+
+/*
+  Add your custom global styles here.
+  The styles provided below are a minimal suggested starting point.
+*/
+
+.layoutContainer {
+  display: flex;
+  background-color: #F4F7FE;
+  height: 100vh;
+  gap: 1%;
+}
+
+.leftSide {
+  width: 17%;
+}
+
+.rightSide {
+  width: 86%;
+  display: flex;
+  flex-wrap: wrap;
+  margin-right: 20px;
+
+  .topBar {
+    width: 100%;
+    height: 12%;
+  }
+
+  .bottomBar {
+    width: 100%;
+    height: 88%;
+    background-color: white;
+    overflow: scroll;
+  }
+}
+
+.flex {
+  display: flex !important;
+}

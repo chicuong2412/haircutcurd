@@ -1,0 +1,62 @@
+.SearchContainer {
+    width: 100%;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    gap: 10px;
+
+    .searchField {
+        width: 100%;
+        height: 40px;
+        font-size: 24px;
+        border-radius: 10px;
+        padding: 0 15px;
+        border: none;
+        outline: none;
+        background-color: #F6F7F8;
+        position: relative;
+    }
+
+    .listResult {
+        background-color: #F6F7F8;
+        width: 100%;
+        border-radius: 10px;
+        height: fit-content;
+        max-height: 200px;
+        scroll-behavior: smooth;
+        padding: 15px;
+        padding-top: 0px;
+        overflow: scroll;
+        display: none;
+        flex-direction: column;
+        position: sticky;
+    }
+
+    .listResult::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+.searchItemContainer {
+    width: 100%;
+    background-color: white;
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    padding: 5px;
+    padding-left: 10px;
+    gap: 4px;
+    border-radius: 15px;
+    font-size: 16px;
+    cursor: pointer;
+
+    .idHeading {
+        width: 100%;
+        
+    }
+
+    .nameHeading {
+        width: 100%;
+    }
+}
