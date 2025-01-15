@@ -86,12 +86,6 @@ const headCells = [
         label: 'Rate',
     },
     {
-        id: 'products',
-        numeric: true,
-        disablePadding: false,
-        label: 'Products',
-    },
-    {
         id: 'function',
         numeric: false,
         disablePadding: true,
@@ -159,7 +153,6 @@ function EnhancedTableToolbar(props) {
                         alpha(theme.palette.primary.main, theme.palette.action.activatedOpacity),
                 },
             ]}
-            className='toolUp'
         >
             {numSelected > 0 ? (
                 <Typography
@@ -178,9 +171,9 @@ function EnhancedTableToolbar(props) {
                     component="div"
                 >
                     <div className={style.container}>
-                        <div className={`${style.newButton} createFormService`}>
+                        <div className={`${style.newButton} createFormCombo`}>
                             <FontAwesomeIcon className={style.iconNew} icon={faPlus} />
-                            <span className={style.newText}>New Service</span>
+                            <span className={style.newText}>New Combo</span>
                         </div>
                         <div class={`${style.searchMain}`}>
                             <input className={style.searchField} type="text" placeholder="" />
@@ -198,7 +191,7 @@ EnhancedTableToolbar.propTypes = {
     numSelected: PropTypes.number.isRequired,
 };
 
-export default function ServiceTable() {
+export default function ComboTable() {
     const [order, setOrder] = React.useState('asc');
     const [orderBy, setOrderBy] = React.useState('name');
     var [selected, setSelected] = React.useState([]);
@@ -209,9 +202,8 @@ export default function ServiceTable() {
     const { toast } = useInfo();
     const [reset, setReset] = React.useState(1);
     const [dataNew, setDataNew] = React.useState([]);
-    let heightBottom = $(".bottomBar").height()*0.82;
-    
-    
+    let heightBottom = $(".bottomBar").height() * 0.82;
+
     function createData(id, name, imgSrc, duration, description, price, rate, ServicesList) {
         return {
             id,
@@ -231,7 +223,7 @@ export default function ServiceTable() {
 
     React.useEffect(() => {
         $.ajax({
-            url: "http://localhost:3120/identity/service/getAllServices",
+            url: "http://localhost:3120/identity/combo/getAllCombos",
             type: 'GET',
             dataType: 'json',
             CORS: false,
@@ -257,20 +249,20 @@ export default function ServiceTable() {
     })
 
     React.useEffect(() => {
-        $(".tableServices").on("click", ".viewService", function () {
+        $(".tableCombos").on("click", ".viewCombo", function () {
             navigate(`view?id=${$(this).attr("dataid")}`);
         });
 
-        $(".tableServices").on("click", ".editService", function () {
+        $(".tableCombos").on("click", ".editCombo", function () {
             navigate(`edit?id=${$(this).attr("dataid")}`);
         });
 
-        $(".tableServices").on("click", ".deleteService", function () {
+        $(".tableCombos").on("click", ".deleteCombo", function () {
             let id = $(this).attr("dataid");
             confirmDelete(id);
         });
 
-        $(`.createFormService`).on('click', function () {
+        $(`.createFormCombo`).on('click', function () {
             navigate(`create`);
         });
     }, []);
@@ -299,7 +291,7 @@ export default function ServiceTable() {
             defaultFocus: 'accept',
             accept() {
                 $.ajax({
-                    url: `http://localhost:3120/identity/service/${id}`,
+                    url: `http://localhost:3120/identity/combo/${id}`,
                     type: 'DELETE',
                     dataType: 'json',
                     headers: {
@@ -351,12 +343,12 @@ export default function ServiceTable() {
             <Box sx={{ width: '100%', height: '100%' }}>
                 <Paper sx={{ width: '100%', mb: 2 }}>
                     <EnhancedTableToolbar numSelected={selected.length} />
-                    <TableContainer sx={{height: `${heightBottom}px`}}>
+                    <TableContainer sx={{ height: `${heightBottom}` }}>
                         <Table
+                            sx={{ minWidth: 750 }}
                             aria-labelledby="tableTitle"
                             size={dense ? 'small' : 'medium'}
-                            className='tableServices'
-                            stickyHeader
+                            className='tableCombos'
                         >
                             <EnhancedTableHead
                                 numSelected={selected.length}
@@ -380,6 +372,7 @@ export default function ServiceTable() {
                                                 key={id}
                                                 selected={isItemSelected}
                                                 sx={{ cursor: 'pointer' }}
+
                                             >
                                                 <TableCell
                                                     component="th"
@@ -395,23 +388,14 @@ export default function ServiceTable() {
                                                 <TableCell align="left">{row.description}</TableCell>
                                                 <TableCell align="right">{row.price}</TableCell>
                                                 <TableCell align="right">{row.rate}</TableCell>
-                                                <TableCell align="center">{row.ServicesList.length}</TableCell>
                                                 <TableCell>
                                                     <div className={style.buttonFunctions}>
-                                                        <FontAwesomeIcon icon={faPenToSquare} dataid={row.id} className='editService' />
-                                                        <FontAwesomeIcon icon={faEye} dataid={row.id} className='viewService' />
-                                                        <FontAwesomeIcon icon={faX} dataid={row.id} className='deleteService' />
+                                                        <FontAwesomeIcon icon={faPenToSquare} dataid={row.id} className='editCombo' />
+                                                        <FontAwesomeIcon icon={faEye} dataid={row.id} className='viewCombo' />
+                                                        <FontAwesomeIcon icon={faX} dataid={row.id} className='deleteCombo' />
                                                     </div>
                                                 </TableCell>
                                             </TableRow>
-                                            <div className={`${style.servicesRow}`}>
-                                                <TableRow>
-
-
-                                                </TableRow>
-
-
-                                            </div>
                                         </>
 
 

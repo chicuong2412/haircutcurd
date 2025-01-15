@@ -20,6 +20,8 @@ import { faMagnifyingGlass, faX, faPlus } from '@fortawesome/free-solid-svg-icon
 import style from "../../../styles/FormStyle.module.scss"
 import { useNavigate } from 'react-router-dom';
 import $ from "jquery"
+import { useInfo } from '../../../layouts/layout';
+import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 
 function createData(id, name, imgSrc, stockQuantity, description, price, rate) {
     return {
@@ -271,21 +273,45 @@ export default function ProductTable() {
     const [page, setPage] = React.useState(0);
     const [dense, setDense] = React.useState(false);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
+    const [dataNew, setDataNew] = React.useState([]);
     const navigate = useNavigate();
+    const { toast } = useInfo();
+    const [reset, setReset] = React.useState(1);
+    let heightBottom = $(".bottomBar").height()*0.82;
+
+    React.useEffect(() => {
+        $.ajax({
+            url: "http://localhost:3120/identity/product/getProducts",
+            type: 'GET',
+            dataType: 'json',
+            CORS: false,
+            contentType: 'application/json',
+            secure: true,
+            async: true,
+            success: function (data) {
+                setDataNew(data.result);
+            }
+        });
+    }, [reset])
 
     React.useEffect(() => {
         $(".tableProducts").on("click", ".view", function () {
-            navigate(`view?id=${$(this).attr("dataID")}`);
+            navigate(`view?id=${$(this).attr("dataid")}`);
         });
 
         $(".tableProducts").on("click", ".edit", function () {
-            navigate(`edit?id=${$(this).attr("dataID")}`);
+            navigate(`edit?id=${$(this).attr("dataid")}`);
         });
 
         $(`.createFormProduct`).on('click', function () {
             navigate(`create`);
         });
-    })
+
+        $(".tableProducts").on("click", ".deleteProduct", function () {
+            let id = $(this).attr("dataid");
+            confirmDelete(id);
+        });
+    }, []);
 
     const handleRequestSort = (event, property) => {
         const isAsc = orderBy === property && order === 'asc';
@@ -303,6 +329,72 @@ export default function ProductTable() {
         setPage(0);
     };
 
+    function createData(id, name, imgSrc, stockQuantity, description, price, rate) {
+        return {
+            id,
+            name,
+            imgSrc,
+            stockQuantity,
+            description,
+            price,
+            rate,
+        };
+    }
+
+    var rows = [
+
+    ];
+
+    dataNew.forEach((product) => {
+        rows.push(createData(
+            product.id,
+            product.name,
+            product.imgSrc,
+            product.stockQuantity,
+            product.description,
+            product.price,
+            product.rate))
+    })
+
+    const confirmDelete = (id) => {
+        confirmDialog({
+            message: 'Are you sure you want to delete?',
+            header: 'Confirmation',
+            icon: 'pi pi-exclamation-triangle',
+            defaultFocus: 'accept',
+            accept() {
+                $.ajax({
+                    url: `http://localhost:3120/identity/product/${id}`,
+                    type: 'DELETE',
+                    dataType: 'json',
+                    headers: {
+                        'Authorization': `Bearer eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJncmVhdHNoYW5nLmNvbSIsInN1YiI6ImFkbWluIiwiaWQiOiJlZDcyMzFjZS0zYjg5LTQxOGUtYWM3Ny1iODNhNGRjNjFjY2IiLCJleHAiOjE3NzAzNjMxOTgsImlhdCI6MTczNDM2MzE5OCwic2NvcGUiOiJXT1JLRVIgQURNSU4ifQ.uITT19uUCsf1tGb3ZDF8oE3nKTeF3xpuZyBRhKvBMK7YhQjfPK06N1GGuvszdQ48JPN_cRXNgzpc4QCnk2qi4A`
+                    },
+                    CORS: false,
+                    contentType: 'application/json',
+                    secure: true,
+                    async: false,
+                    success: function (data) {
+                        if (data.code === 104) {
+                            setReset(prevState => prevState + 1);
+                            toast.current.show({ severity: 'info', summary: '', detail: 'Deleted succesfully', life: 3000 });
+                        } else {
+                            toast.current.show({ severity: 'error', summary: '', detail: 'Delete failed', life: 3000 });
+                        }
+                    },
+                    error: function (data) {
+                        toast.current.show({ severity: 'error', summary: '', detail: `${data.responseJSON.message}`, life: 3000 });
+                    }
+                })
+
+
+            },
+            reject() {
+                toast.current.show({ severity: 'warn', summary: 'Rejected', detail: 'You have rejected', life: 3000 });
+            }
+        });
+    };
+
 
     // Avoid a layout jump when reaching the last page with empty rows.
     const emptyRows =
@@ -313,20 +405,21 @@ export default function ProductTable() {
             [...rows]
                 .sort(getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
-        [order, orderBy, page, rowsPerPage],
+        [order, orderBy, page, rowsPerPage, rows],
     );
 
     return (
         <>
+            <ConfirmDialog></ConfirmDialog>
             <Box sx={{ width: '100%', height: '100%' }}>
                 <Paper sx={{ width: '100%', mb: 2 }}>
                     <EnhancedTableToolbar numSelected={selected.length} />
-                    <TableContainer>
+                    <TableContainer sx={{height: `${heightBottom}px`}}>
                         <Table
-                            sx={{ minWidth: 750 }}
                             aria-labelledby="tableTitle"
                             size={dense ? 'small' : 'medium'}
                             className='tableProducts'
+                            stickyHeader
                         >
                             <EnhancedTableHead
                                 numSelected={selected.length}
@@ -350,7 +443,7 @@ export default function ProductTable() {
                                                 key={id}
                                                 selected={isItemSelected}
                                                 sx={{ cursor: 'pointer' }}
-                                                
+
                                             >
                                                 <TableCell
                                                     component="th"
@@ -368,9 +461,9 @@ export default function ProductTable() {
                                                 <TableCell align="right">{row.rate}</TableCell>
                                                 <TableCell>
                                                     <div className={style.buttonFunctions}>
-                                                        <FontAwesomeIcon icon={faPenToSquare} dataID={row.id} className='edit' />
-                                                        <FontAwesomeIcon icon={faEye} dataID={row.id} className='view' />
-                                                        <FontAwesomeIcon icon={faX} />
+                                                        <FontAwesomeIcon icon={faPenToSquare} dataid={row.id} className='edit' />
+                                                        <FontAwesomeIcon icon={faEye} dataid={row.id} className='view' />
+                                                        <FontAwesomeIcon icon={faX} dataid={row.id} className='deleteProduct' />
                                                     </div>
                                                 </TableCell>
                                             </TableRow>

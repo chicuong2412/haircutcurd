@@ -1,33 +1,27 @@
 import React from 'react'
+import LocationTable from './LocationTable'
 import { Route, Routes } from 'react-router-dom'
-import { EmployeeForm, EmployeeCreateForm, EditEmployeeForm } from './EmployeeForm'
-import Table from '../Table'
+import { LocationCreateForm, LocationForm, EditingLocationForm } from './LocationForm'
 import { Checkbox } from '@mui/material'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPenToSquare, faEye } from '@fortawesome/free-regular-svg-icons';
 import { faX } from '@fortawesome/free-solid-svg-icons';
 import style from "../../styles/FormStyle.module.scss"
+import Table from '../Table'
 
-
-export default function Employee() {
+export default function Location() {
     return (
         <Routes>
             <Route path='/' element={<Table
                 colDefsIn={[
                     { headerName: "ID", field: "id", resizable: true },
-                    { field: "username", resizable: true },
-                    { headerName: "Name", field: "nameWorker", resizable: true },
-                    { headerName: "DoB", field: "doB", resizable: true },
+                    { field: "name", resizable: true },
+                    { field: "imgSrc", resizable: true },
+                    { headerName: "Address", field: "address", resizable: true },
+                    { field: "city", resizable: true },
+                    { field: "phoneNumber", resizable: true},
                     { field: "email", resizable: true },
-                    { field: "specialities", resizable: true },
-                    { field: "address", resizable: true },
-                    { field: "phoneNumber", resizable: true },
-                    { field: "rate", resizable: true },
-                    { field: "idRole", resizable: true },
-                    {
-                        headerName: "Location", field: "location", cellRendererFramework: (params) =>
-                            params.data.location.name , resizable: true
-                    },
+                    { field: "openHour", resizable: true },
                     {
                         headerName: "Deleted", field: "deleted", cellRendererFramework: (params) =>
                             <Checkbox disabled checked={params.data.deleted}></Checkbox>
@@ -44,13 +38,12 @@ export default function Employee() {
                         }
                     }
                 ]}
-                link={"http://localhost:3120/identity/workers/getAllWorkers"}
-                nameLink={"workers"}
-                chartField={["rate"]}
-            ></Table>}></Route>
-            <Route path='/view/*' element={<EmployeeForm></EmployeeForm>}></Route>
-            <Route path='/create/*' element={<EmployeeCreateForm></EmployeeCreateForm>}></Route>
-            <Route path='/edit/*' element={<EditEmployeeForm></EditEmployeeForm>}></Route>
+                link={"http://localhost:3120/identity/locations/getLocations"}
+                nameLink={"locations"}
+                chartField={["id", "duration", "price", "rate"]}></Table>}></Route>
+            <Route path='/view/*' element={<LocationForm></LocationForm>}></Route>
+            <Route path='/create/*' element={<LocationCreateForm></LocationCreateForm>}></Route>
+            <Route path='/edit/*' element={<EditingLocationForm></EditingLocationForm>}></Route>
         </Routes>
     )
 }

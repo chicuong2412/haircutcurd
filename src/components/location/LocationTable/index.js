@@ -23,6 +23,7 @@ import $ from "jquery"
 import { useInfo } from '../../../layouts/layout';
 import { ConfirmDialog } from 'primereact/confirmdialog'; // To use <ConfirmDialog> tag
 import { confirmDialog } from 'primereact/confirmdialog'; // To use confirmDialog method
+import { Checkbox } from '@mui/material';
 
 
 
@@ -62,34 +63,40 @@ const headCells = [
         label: 'imgSrc',
     },
     {
-        id: 'duration',
+        id: 'address',
         numeric: true,
         disablePadding: false,
-        label: 'Duration',
+        label: 'Address',
     },
     {
-        id: 'description',
+        id: 'city',
         numeric: false,
         disablePadding: false,
-        label: 'Description',
+        label: 'City',
     },
     {
-        id: 'price',
-        numeric: true,
+        id: 'phoneNumber',
+        numeric: false,
         disablePadding: false,
-        label: 'Price',
+        label: 'PhoneNumber',
     },
     {
-        id: 'rate',
-        numeric: true,
+        id: 'email',
+        numeric: false,
         disablePadding: false,
-        label: 'Rate',
+        label: 'Email',
     },
     {
-        id: 'products',
-        numeric: true,
+        id: 'openHour',
+        numeric: false,
         disablePadding: false,
-        label: 'Products',
+        label: 'OpenHour',
+    },
+    {
+        id: 'isDeleted',
+        numeric: false,
+        disablePadding: true,
+        label: 'Deleted',
     },
     {
         id: 'function',
@@ -159,7 +166,6 @@ function EnhancedTableToolbar(props) {
                         alpha(theme.palette.primary.main, theme.palette.action.activatedOpacity),
                 },
             ]}
-            className='toolUp'
         >
             {numSelected > 0 ? (
                 <Typography
@@ -178,9 +184,9 @@ function EnhancedTableToolbar(props) {
                     component="div"
                 >
                     <div className={style.container}>
-                        <div className={`${style.newButton} createFormService`}>
+                        <div className={`${style.newButton} createFormLocation`}>
                             <FontAwesomeIcon className={style.iconNew} icon={faPlus} />
-                            <span className={style.newText}>New Service</span>
+                            <span className={style.newText}>New Location</span>
                         </div>
                         <div class={`${style.searchMain}`}>
                             <input className={style.searchField} type="text" placeholder="" />
@@ -198,7 +204,7 @@ EnhancedTableToolbar.propTypes = {
     numSelected: PropTypes.number.isRequired,
 };
 
-export default function ServiceTable() {
+export default function LocationTable() {
     const [order, setOrder] = React.useState('asc');
     const [orderBy, setOrderBy] = React.useState('name');
     var [selected, setSelected] = React.useState([]);
@@ -209,19 +215,19 @@ export default function ServiceTable() {
     const { toast } = useInfo();
     const [reset, setReset] = React.useState(1);
     const [dataNew, setDataNew] = React.useState([]);
-    let heightBottom = $(".bottomBar").height()*0.82;
-    
-    
-    function createData(id, name, imgSrc, duration, description, price, rate, ServicesList) {
+    let heightBottom = $(".bottomBar").height() * 0.82;
+
+    function createData(id, name, imgSrc, address, city, phoneNumber, email, openHour, deleted) {
         return {
             id,
             name,
             imgSrc,
-            duration,
-            description,
-            price,
-            rate,
-            ServicesList,
+            address,
+            city,
+            phoneNumber,
+            email,
+            openHour,
+            deleted
         };
     }
 
@@ -231,7 +237,7 @@ export default function ServiceTable() {
 
     React.useEffect(() => {
         $.ajax({
-            url: "http://localhost:3120/identity/service/getAllServices",
+            url: "http://localhost:3120/identity/location/getLocations",
             type: 'GET',
             dataType: 'json',
             CORS: false,
@@ -244,33 +250,37 @@ export default function ServiceTable() {
         });
     }, [reset])
 
-    dataNew.forEach((service) => {
+    console.log(dataNew);
+    
+
+    dataNew.forEach((location) => {
         rows.push(createData(
-            service.id,
-            service.name,
-            service.imgSrc,
-            service.duration,
-            service.description,
-            service.price,
-            service.rate,
-            service.productsList,))
+            location.id,
+            location.name,
+            location.imgSrc,
+            location.address,
+            location.city,
+            location.phoneNumber,
+            location.email,
+            location.openHour,
+            location.deleted))
     })
 
     React.useEffect(() => {
-        $(".tableServices").on("click", ".viewService", function () {
+        $(".tableLocations").on("click", ".viewLocation", function () {
             navigate(`view?id=${$(this).attr("dataid")}`);
         });
 
-        $(".tableServices").on("click", ".editService", function () {
+        $(".tableLocations").on("click", ".editLocation", function () {
             navigate(`edit?id=${$(this).attr("dataid")}`);
         });
 
-        $(".tableServices").on("click", ".deleteService", function () {
+        $(".tableLocations").on("click", ".deleteLocation", function () {
             let id = $(this).attr("dataid");
             confirmDelete(id);
         });
 
-        $(`.createFormService`).on('click', function () {
+        $(`.createFormLocation`).on('click', function () {
             navigate(`create`);
         });
     }, []);
@@ -299,7 +309,7 @@ export default function ServiceTable() {
             defaultFocus: 'accept',
             accept() {
                 $.ajax({
-                    url: `http://localhost:3120/identity/service/${id}`,
+                    url: `http://localhost:3120/identity/location/deleteLocation/${id}`,
                     type: 'DELETE',
                     dataType: 'json',
                     headers: {
@@ -351,12 +361,12 @@ export default function ServiceTable() {
             <Box sx={{ width: '100%', height: '100%' }}>
                 <Paper sx={{ width: '100%', mb: 2 }}>
                     <EnhancedTableToolbar numSelected={selected.length} />
-                    <TableContainer sx={{height: `${heightBottom}px`}}>
+                    <TableContainer sx={{ height: `${heightBottom}` }}>
                         <Table
+                            sx={{ minWidth: 750 }}
                             aria-labelledby="tableTitle"
                             size={dense ? 'small' : 'medium'}
-                            className='tableServices'
-                            stickyHeader
+                            className='tableLocations'
                         >
                             <EnhancedTableHead
                                 numSelected={selected.length}
@@ -367,6 +377,7 @@ export default function ServiceTable() {
                             />
                             <TableBody>
                                 {visibleRows.map((row, index) => {
+                                    console.log(row);
                                     const id = row.id;
                                     const isItemSelected = selected.includes(id);
                                     const labelId = `enhanced-table-checkbox-${index}`;
@@ -380,6 +391,7 @@ export default function ServiceTable() {
                                                 key={id}
                                                 selected={isItemSelected}
                                                 sx={{ cursor: 'pointer' }}
+
                                             >
                                                 <TableCell
                                                     component="th"
@@ -391,27 +403,20 @@ export default function ServiceTable() {
                                                 </TableCell>
                                                 <TableCell align="left">{row.name}</TableCell>
                                                 <TableCell align="left">{row.imgSrc}</TableCell>
-                                                <TableCell align="center">{row.duration}</TableCell>
-                                                <TableCell align="left">{row.description}</TableCell>
-                                                <TableCell align="right">{row.price}</TableCell>
-                                                <TableCell align="right">{row.rate}</TableCell>
-                                                <TableCell align="center">{row.ServicesList.length}</TableCell>
+                                                <TableCell align="center">{row.address}</TableCell>
+                                                <TableCell align="left">{row.city}</TableCell>
+                                                <TableCell align="right">{row.phoneNumber}</TableCell>
+                                                <TableCell align="right">{row.email}</TableCell>
+                                                <TableCell align="right">{row.openHour}</TableCell>
+                                                <TableCell align="right"><Checkbox checked = {row.deleted} /></TableCell>
                                                 <TableCell>
                                                     <div className={style.buttonFunctions}>
-                                                        <FontAwesomeIcon icon={faPenToSquare} dataid={row.id} className='editService' />
-                                                        <FontAwesomeIcon icon={faEye} dataid={row.id} className='viewService' />
-                                                        <FontAwesomeIcon icon={faX} dataid={row.id} className='deleteService' />
+                                                        <FontAwesomeIcon icon={faPenToSquare} dataid={row.id} className='editLocation' />
+                                                        <FontAwesomeIcon icon={faEye} dataid={row.id} className='viewLocation' />
+                                                        <FontAwesomeIcon icon={faX} dataid={row.id} className='deleteLocation' />
                                                     </div>
                                                 </TableCell>
                                             </TableRow>
-                                            <div className={`${style.servicesRow}`}>
-                                                <TableRow>
-
-
-                                                </TableRow>
-
-
-                                            </div>
                                         </>
 
 

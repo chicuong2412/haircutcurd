@@ -1,9 +1,9 @@
-require('dotenv').config({path: `${__dirname}/.env`}) // http://bit.ly/2WE8EJP
-const {NODE_ENV, DEV_SERVER_PORT, API, API_PORT, API_WEBPACK} = process.env
+require('dotenv').config({ path: `${__dirname}/.env` }) // http://bit.ly/2WE8EJP
+const { NODE_ENV, DEV_SERVER_PORT, API, API_PORT, API_WEBPACK } = process.env
 const path = require('path')
 const webpack = require('webpack')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
-const {CleanWebpackPlugin} = require('clean-webpack-plugin')
+const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const TerserPlugin = require('terser-webpack-plugin')
 const AfterCompilePlugin = require('./after-compile-plugin')
@@ -193,7 +193,7 @@ module.exports = (env, argv) => ({
                 ],
                 [
                   '@babel/preset-react', // http://bit.ly/2KpNOYb
-                  {runtime: 'automatic'}, // https://bit.ly/38lOGri
+                  { runtime: 'automatic' }, // https://bit.ly/38lOGri
                 ],
               ],
 
@@ -242,6 +242,17 @@ module.exports = (env, argv) => ({
         ].filter(Boolean),
       },
 
+      {
+        test: /\.css$/,
+        use: [
+          { loader: 'css-loader' },
+        ]
+      },
+      {
+        test: /\.(jpe?g|png|gif|woff|woff2|eot|ttf|svg)(\?[a-z0-9=.]+)?$/,
+        loader: 'url-loader',
+        exclude: /src/,
+      },
       /*
         FONTS
         -----
@@ -249,63 +260,63 @@ module.exports = (env, argv) => ({
         * Keeps the original file name
       */
       {
-        test: /\.(woff|woff2|eot|ttf|otf)$/,
-        include: path.resolve(__dirname, 'src'),
-        use: [
-          {
-            loader: 'file-loader',
-            options: {
-              name: '[name].[ext]',
-            },
+  test: /\.(woff|woff2|eot|ttf|otf)$/,
+    include: path.resolve(__dirname, 'src'),
+      use: [
+        {
+          loader: 'file-loader',
+          options: {
+            name: '[name].[ext]',
           },
-        ],
+        },
+      ],
       },
 
-      /*
-        IMAGES
-        ------
-        * Copies fonts found within the `src` tree to the `dist` folder
-        * Keeps the original file name
-      */
-      {
-        test: /\.(png|svg|jpg|gif)$/,
-        include: path.resolve(__dirname, 'src/assets'),
-        use: [
-          {
-            loader: 'file-loader',
-            options: {
-              name: '[name].[ext]',
-            },
+/*
+  IMAGES
+  ------
+  * Copies fonts found within the `src` tree to the `dist` folder
+  * Keeps the original file name
+*/
+{
+  test: /\.(png|svg|jpg|gif)$/,
+    include: path.resolve(__dirname, 'src/assets'),
+      use: [
+        {
+          loader: 'file-loader',
+          options: {
+            name: '[name].[ext]',
           },
-        ],
+        },
+      ],
       },
     ],
   },
 
-  // http://bit.ly/2WGnFeg
-  resolve: {
-    /*
-      http://bit.ly/2WyqhuP
-      Create aliases to import certain modules more easily.
-      Eliminates having to type out ../../../ all the time.
-    */
-    alias: {
-      components: path.resolve(__dirname, 'src/components'),
+// http://bit.ly/2WGnFeg
+resolve: {
+  /*
+    http://bit.ly/2WyqhuP
+    Create aliases to import certain modules more easily.
+    Eliminates having to type out ../../../ all the time.
+  */
+  alias: {
+    components: path.resolve(__dirname, 'src/components'),
       assets: path.resolve(__dirname, 'src/assets'),
-      hooks: path.resolve(__dirname, 'src/hooks'),
-      helpers: path.resolve(__dirname, 'src/helpers')
-    },
-
-    /*
-      http://bit.ly/2WI1BQo
-      Automatically resolve certain extensions without having to type them out.
-    */
-    extensions: ['.js', '.jsx', '.json', '.scss'],
+        hooks: path.resolve(__dirname, 'src/hooks'),
+          helpers: path.resolve(__dirname, 'src/helpers')
   },
 
-  // http://bit.ly/2WH6fOH
-  optimization: {
-    minimize: !!env.prod,
+  /*
+    http://bit.ly/2WI1BQo
+    Automatically resolve certain extensions without having to type them out.
+  */
+  extensions: ['.js', '.jsx', '.json', '.scss'],
+  },
+
+// http://bit.ly/2WH6fOH
+optimization: {
+  minimize: !!env.prod,
     minimizer: [
       // http://bit.ly/2WEaavt - List of reasons we're using Terser instead (Webpack is too!).
       new TerserPlugin({
@@ -331,104 +342,104 @@ module.exports = (env, argv) => ({
     ],
   },
 
-  // http://bit.ly/2WOvpLv
-  plugins: [
+// http://bit.ly/2WOvpLv
+plugins: [
+  /*
+    http://bit.ly/2WEeBGF
+    Make global variables available to the app.
+    Needed in order to use the production-ready minified version of React.
+  */
+  new webpack.DefinePlugin({
     /*
-      http://bit.ly/2WEeBGF
-      Make global variables available to the app.
+      https://bit.ly/3mB98cM - Convenience variables.
+      Note that because the plugin does a direct text replacement,
+      the value given to it must include actual quotes inside of the string itself.
+      Typically, this is done either with alternate quotes, such as '"production"',
+      or by using JSON.stringify('production').
+    */
+    __DEV__: !env.prod,
+    __PROD__: env.prod,
+
+    /*
+      You can use this variable on the front end to prefix all fetch requests:
+        fetch(`${__API__}/my-route`)
+    */
+    __API__: JSON.stringify(API),
+
+    /*
+      http://bit.ly/2WBx4DZ
       Needed in order to use the production-ready minified version of React.
+      Avoids warnings in the console.
     */
-    new webpack.DefinePlugin({
-      /*
-        https://bit.ly/3mB98cM - Convenience variables.
-        Note that because the plugin does a direct text replacement,
-        the value given to it must include actual quotes inside of the string itself.
-        Typically, this is done either with alternate quotes, such as '"production"',
-        or by using JSON.stringify('production').
-      */
-      __DEV__: !env.prod,
-      __PROD__: env.prod,
+    'process.env': {
+      NODE_ENV: JSON.stringify(env.prod ? 'production' : 'development'),
+    },
+  }),
 
-      /*
-        You can use this variable on the front end to prefix all fetch requests:
-          fetch(`${__API__}/my-route`)
-      */
-      __API__: JSON.stringify(API),
+  // This must be used in conjunction with the associated scss module rule.
+  new MiniCssExtractPlugin({
+    // Options similar to the same options in webpackOptions.output
+    // Both options are optional.
+    filename: '[name].[fullhash].css',
+    chunkFilename: '[id].css',
+  }),
 
-      /*
-        http://bit.ly/2WBx4DZ
-        Needed in order to use the production-ready minified version of React.
-        Avoids warnings in the console.
-      */
-      'process.env': {
-        NODE_ENV: JSON.stringify(env.prod ? 'production' : 'development'),
-      },
-    }),
+  /*
+    http://bit.ly/2WEalXF
+    A webpack plugin to remove/clean your build folder(s) before building.
+    The targeted folder is whatever is set above for `output.path`.
+    Since our build process generates a js, css, and html file, we'll only
+    clean those types. This allows you to put any other static assets in the
+    `dist` folder worry free, such as fonts, images, etc.
+  */
+  new CleanWebpackPlugin({
+    verbose: true,
+    cleanOnceBeforeBuildPatterns: ['*.js', '*.css', '*.html'],
+    cleanAfterEveryBuildPatterns: ['*.js', '*.css', '*.html'],
+  }),
 
-    // This must be used in conjunction with the associated scss module rule.
-    new MiniCssExtractPlugin({
-      // Options similar to the same options in webpackOptions.output
-      // Both options are optional.
-      filename: '[name].[fullhash].css',
-      chunkFilename: '[id].css',
-    }),
+  /*
+    http://bit.ly/2WJ6pFd, http://bit.ly/2WBxaLR
+    Generates the `index.html` file.
+  */
+  new HtmlWebpackPlugin({
+    template: path.resolve(__dirname, 'src/index.ejs'),
+    title: '',
+    mobileThemeColor: '#000000',
+    description: '',
+    minify: env.prod
+      ? {
+        collapseWhitespace: true,
+        removeComments: true,
+      }
+      : false,
 
-    /*
-      http://bit.ly/2WEalXF
-      A webpack plugin to remove/clean your build folder(s) before building.
-      The targeted folder is whatever is set above for `output.path`.
-      Since our build process generates a js, css, and html file, we'll only
-      clean those types. This allows you to put any other static assets in the
-      `dist` folder worry free, such as fonts, images, etc.
-    */
-    new CleanWebpackPlugin({
-      verbose: true,
-      cleanOnceBeforeBuildPatterns: ['*.js', '*.css', '*.html'],
-      cleanAfterEveryBuildPatterns: ['*.js', '*.css', '*.html'],
-    }),
+    // Order the different entry points found at the top of this file.
+    chunks: ['main'],
+    chunksSortMode: 'manual',
+  }),
 
-    /*
-      http://bit.ly/2WJ6pFd, http://bit.ly/2WBxaLR
-      Generates the `index.html` file.
-    */
-    new HtmlWebpackPlugin({
-      template: path.resolve(__dirname, 'src/index.ejs'),
-      title: '',
-      mobileThemeColor: '#000000',
-      description: '',
-      minify: env.prod
-        ? {
-            collapseWhitespace: true,
-            removeComments: true,
-          }
-        : false,
+  // Necessary for the new React Fast Refresh functionality.
+  !env.prod && new webpack.HotModuleReplacementPlugin(),
+  !env.prod && new ReactRefreshWebpackPlugin(),
 
-      // Order the different entry points found at the top of this file.
-      chunks: ['main'],
-      chunksSortMode: 'manual',
-    }),
-
-    // Necessary for the new React Fast Refresh functionality.
-    !env.prod && new webpack.HotModuleReplacementPlugin(),
-    !env.prod && new ReactRefreshWebpackPlugin(),
-
-    /*
-      A simple, custom Webpack plugin to run a function after each build.
-      It will log url info to the console for the API and browser.
-      You can see the code in `after-compile-plugin.js` in the project root dir.
-    */
-    !env.prod && new AfterCompilePlugin(),
-  ].filter(Boolean),
+  /*
+    A simple, custom Webpack plugin to run a function after each build.
+    It will log url info to the console for the API and browser.
+    You can see the code in `after-compile-plugin.js` in the project root dir.
+  */
+  !env.prod && new AfterCompilePlugin(),
+].filter(Boolean),
 
   // http://bit.ly/2WEpbgZ
   devServer: {
-    /*
-      http://bit.ly/2WHYfwO
-      Tell the dev server where to serve content from.
-      This is only necessary if you want to serve static files.
-      Content not served from Webpack's devServer is served from here.
-    */
-    contentBase: path.resolve(__dirname, 'dist'),
+  /*
+    http://bit.ly/2WHYfwO
+    Tell the dev server where to serve content from.
+    This is only necessary if you want to serve static files.
+    Content not served from Webpack's devServer is served from here.
+  */
+  contentBase: path.resolve(__dirname, 'dist'),
 
     /*
       http://bit.ly/2WFe8nS
@@ -437,85 +448,85 @@ module.exports = (env, argv) => ({
     */
     historyApiFallback: true,
 
-    /*
-      http://bit.ly/2WOwJhr
-      Want to view your site on your phone?
-      Make sure your computer and phone are on the same wifi network,
-      and navigate to your computer's ip addres: 192.1.2.3:<dev server port>
-      The actual url will be printed to the console in development thanks to the
-      `AfterCompilePlugin`.
-    */
-    host: '0.0.0.0',
+      /*
+        http://bit.ly/2WOwJhr
+        Want to view your site on your phone?
+        Make sure your computer and phone are on the same wifi network,
+        and navigate to your computer's ip addres: 192.1.2.3:<dev server port>
+        The actual url will be printed to the console in development thanks to the
+        `AfterCompilePlugin`.
+      */
+      host: '0.0.0.0',
 
-    // http://bit.ly/2WOx4kd
-    open: true,
+        // http://bit.ly/2WOx4kd
+        open: true,
 
-    // http://bit.ly/2WFzCkq
-    port: DEV_SERVER_PORT,
+          // http://bit.ly/2WFzCkq
+          port: DEV_SERVER_PORT,
 
-    /*
-      http://bit.ly/2WIXOSV, http://bit.ly/2WDMWpv
-      Nobody wants to see 0.0.0.0 in the browser. This get's rid of that.
-    */
-    public: `http://localhost:${DEV_SERVER_PORT}`,
-
-    /*
-      http://bit.ly/2XlEOXN
-      Redirect non-static asset calls to the backend API server.
-      Unrecognized urls (non-API calls) will be directed to '/'.
-      404's will be served `index.html` by `historyApiFallback` above.
-    */
-    proxy: API_WEBPACK
-      ? {
-          [API_WEBPACK]: {
-            target: `http://localhost:${API_PORT}`,
-            bypass(req, res, proxyOptions) {
-              // Direct all non-get requests to the API server.
-              if (req.method.toLowerCase() !== 'get') return
+            /*
+              http://bit.ly/2WIXOSV, http://bit.ly/2WDMWpv
+              Nobody wants to see 0.0.0.0 in the browser. This get's rid of that.
+            */
+            public: `http://localhost:${DEV_SERVER_PORT}`,
 
               /*
-            Proxy url (browser) requests back to '/'
-            and let the front end do all the routing.
-            For all others, let the API server respond.
-          */
+                http://bit.ly/2XlEOXN
+                Redirect non-static asset calls to the backend API server.
+                Unrecognized urls (non-API calls) will be directed to '/'.
+                404's will be served `index.html` by `historyApiFallback` above.
+              */
+              proxy: API_WEBPACK
+                ? {
+                  [API_WEBPACK]: {
+                    target: `http://localhost:${API_PORT}`,
+                    bypass(req, res, proxyOptions) {
+                      // Direct all non-get requests to the API server.
+                      if (req.method.toLowerCase() !== 'get') return
 
-              /*
-            http://bit.ly/2XlEOXN
-            Url / browser request - allow front end routing to handle all the things.
-          */
-              if ((req.headers.accept || '').includes('html')) return '/'
+                      /*
+                    Proxy url (browser) requests back to '/'
+                    and let the front end do all the routing.
+                    For all others, let the API server respond.
+                  */
 
-              // Let the API server respond by implicitly returning here.
-            },
-          },
-        }
-      : {},
+                      /*
+                    http://bit.ly/2XlEOXN
+                    Url / browser request - allow front end routing to handle all the things.
+                  */
+                      if ((req.headers.accept || '').includes('html')) return '/'
 
-    // https://bit.ly/3nM4mL0
-    watchContentBase: true,
+                      // Let the API server respond by implicitly returning here.
+                    },
+                  },
+                }
+                : {},
 
-    // https://bit.ly/2WQBndb
-    hot: true,
+                // https://bit.ly/3nM4mL0
+                watchContentBase: true,
 
-    // https://bit.ly/3mIacvB
-    inline: true,
+                  // https://bit.ly/2WQBndb
+                  hot: true,
 
-    /*
-      https://bit.ly/37EzOVO
-      We disable both of these because the ReactRefresh plugin will put a
-      verbose error on the screen showing where the error occured.
-    */
-    overlay: {
-      warnings: false,
+                    // https://bit.ly/3mIacvB
+                    inline: true,
+
+                      /*
+                        https://bit.ly/37EzOVO
+                        We disable both of these because the ReactRefresh plugin will put a
+                        verbose error on the screen showing where the error occured.
+                      */
+                      overlay: {
+    warnings: false,
       errors: false,
     },
-  },
+},
 
-  /*
-    https://bit.ly/3rdPV4o
-    Only certain values work with TerserPlugin.
-  */
-  devtool: !env.prod && 'source-map',
+/*
+  https://bit.ly/3rdPV4o
+  Only certain values work with TerserPlugin.
+*/
+devtool: !env.prod && 'source-map',
 
   /*
     http://bit.ly/2WFA41T

@@ -3,7 +3,10 @@ import style from "../../../styles/FormStyle.module.scss"
 import { TextField, Radio, RadioGroup, FormControlLabel, FormLabel, } from '@mui/material'
 import ContentCutIcon from '@mui/icons-material/ContentCut';
 import SmallServicePane from '../../services/serviceSmallPane';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faLeftLong } from '@fortawesome/free-solid-svg-icons';
+import $ from "jquery";
 
 export function AppointmentForm() {
 
@@ -127,133 +130,141 @@ export function AppointmentForm() {
         setIdComboView(event.target.value);
     };
 
+    const navigate = useNavigate();
+
+    React.useEffect(()=> {
+        $(".backArrow").on("click", function() {
+            navigate("/" + $(this).attr("databack"));
+        })
+    }, []);
 
     return (
-        <div className={style.formContainer}>
-            <div className={style.left}>
-                <TextField
-                    label="Appointment ID"
-                    value={appointmentID}
-                    fullWidth
-                    margin='normal'
-                >
-                </TextField>
-                <TextField
-                    label="Customer"
-                    value={customerView}
-                    fullWidth
-                    margin='normal'
-                >
-                </TextField>
-                <RadioGroup
-                    row
-                    aria-labelledby="demo-row-radio-buttons-group-label"
-                    name="row-radio-buttons-group"
-                    value={idCustomerView}
-                    onChange={handleChangeCustomerView}
-                >
-                    <FormControlLabel value="ID" control={<Radio />} label="ID" />
-                    <FormControlLabel value="Name" control={<Radio />} label="Name" />
-                </RadioGroup>
-                <TextField
-                    label="Worker"
-                    value={workerView}
-                    fullWidth
-                    margin='normal'
-                >
-                </TextField>
-                <RadioGroup
-                    row
-                    aria-labelledby="demo-row-radio-buttons-group-label"
-                    name="row-radio-buttons-group"
-                    value={idWorkerView}
-                    onChange={handleChangeWorkerView}
-                >
-                    <FormControlLabel value="ID" control={<Radio />} label="ID" />
-                    <FormControlLabel value="Name" control={<Radio />} label="Name" />
-                </RadioGroup>
+        <>
+            <FontAwesomeIcon databack="appointments" className='backArrow' icon={faLeftLong}></FontAwesomeIcon>
+            <div className={style.formContainer}>
+                <div className={style.left}>
+                    <TextField
+                        label="Appointment ID"
+                        value={appointmentID}
+                        fullWidth
+                        margin='normal'
+                    >
+                    </TextField>
+                    <TextField
+                        label="Customer"
+                        value={customerView}
+                        fullWidth
+                        margin='normal'
+                    >
+                    </TextField>
+                    <RadioGroup
+                        row
+                        aria-labelledby="demo-row-radio-buttons-group-label"
+                        name="row-radio-buttons-group"
+                        value={idCustomerView}
+                        onChange={handleChangeCustomerView}
+                    >
+                        <FormControlLabel value="ID" control={<Radio />} label="ID" />
+                        <FormControlLabel value="Name" control={<Radio />} label="Name" />
+                    </RadioGroup>
+                    <TextField
+                        label="Worker"
+                        value={workerView}
+                        fullWidth
+                        margin='normal'
+                    >
+                    </TextField>
+                    <RadioGroup
+                        row
+                        aria-labelledby="demo-row-radio-buttons-group-label"
+                        name="row-radio-buttons-group"
+                        value={idWorkerView}
+                        onChange={handleChangeWorkerView}
+                    >
+                        <FormControlLabel value="ID" control={<Radio />} label="ID" />
+                        <FormControlLabel value="Name" control={<Radio />} label="Name" />
+                    </RadioGroup>
 
-                <TextField
-                    label="Location"
-                    value={locationView}
-                    fullWidth
-                    margin='normal'
-                >
-                </TextField>
-                <RadioGroup
-                    row
-                    aria-labelledby="demo-row-radio-buttons-group-label"
-                    name="row-radio-buttons-group"
-                    value={idLocaionView}
-                    onChange={handleChangeLocationView}
-                >
-                    <FormControlLabel value="ID" control={<Radio />} label="ID" />
-                    <FormControlLabel value="Name" control={<Radio />} label="Name" />
-                </RadioGroup>
+                    <TextField
+                        label="Location"
+                        value={locationView}
+                        fullWidth
+                        margin='normal'
+                    >
+                    </TextField>
+                    <RadioGroup
+                        row
+                        aria-labelledby="demo-row-radio-buttons-group-label"
+                        name="row-radio-buttons-group"
+                        value={idLocaionView}
+                        onChange={handleChangeLocationView}
+                    >
+                        <FormControlLabel value="ID" control={<Radio />} label="ID" />
+                        <FormControlLabel value="Name" control={<Radio />} label="Name" />
+                    </RadioGroup>
 
-                <FormLabel id="demo-radio-buttons-group-label">Status</FormLabel>
-                <RadioGroup
-                    row
-                    aria-labelledby="demo-radio-buttons-group-label"
-                    value={status}
-                    name="radio-buttons-group"
-                >
-                    <FormControlLabel value="WAITING" control={<Radio />} label="WAITING" />
-                    <FormControlLabel value="CANCELLED" control={<Radio />} label="CANCELLED" />
-                    <FormControlLabel value="OVERDUE" control={<Radio />} label="OVERDUE" />
-                    <FormControlLabel value="DONE" control={<Radio />} label="DONE" />
-                </RadioGroup>
+                    <FormLabel id="demo-radio-buttons-group-label">Status</FormLabel>
+                    <RadioGroup
+                        row
+                        aria-labelledby="demo-radio-buttons-group-label"
+                        value={status}
+                        name="radio-buttons-group"
+                    >
+                        <FormControlLabel value="WAITING" control={<Radio />} label="WAITING" />
+                        <FormControlLabel value="CANCELLED" control={<Radio />} label="CANCELLED" />
+                        <FormControlLabel value="OVERDUE" control={<Radio />} label="OVERDUE" />
+                        <FormControlLabel value="DONE" control={<Radio />} label="DONE" />
+                    </RadioGroup>
 
-                <TextField
-                    label="Price"
-                    value={price}
-                    fullWidth
-                    margin='normal'
-                >
-                </TextField>
-
-            </div>
-
-            <div className={style.right}>
-                <div className={style.scrollPane}>
-                    <div className={style.listPane}>
-                        <span className={style.formHeading}><ContentCutIcon /> SERVICES: </span>
-                        <RadioGroup
-                            row
-                            aria-labelledby="demo-row-radio-buttons-group-label"
-                            name="row-radio-buttons-group"
-                            value={idServicesView}
-                            onChange={handleChangeServicesView}
-                        >
-                            <FormControlLabel value="ID" control={<Radio />} label="ID" />
-                            <FormControlLabel value="Name" control={<Radio />} label="Name" />
-                        </RadioGroup>
-                        {products.map((t, index) => {
-                            return (<SmallServicePane key={t.id} heading={(idServicesView === "ID") ? t.id : t.name}></SmallServicePane>)
-                        })}
-                    </div>
-
-                    <div className={style.listPane}>
-                        <span className={style.formHeading}><ContentCutIcon /> Combos: </span>
-                        <RadioGroup
-                            row
-                            aria-labelledby="demo-row-radio-buttons-group-label"
-                            name="row-radio-buttons-group"
-                            value={idComboView}
-                            onChange={handleChangeComboView}
-                        >
-                            <FormControlLabel value="ID" control={<Radio />} label="ID" />
-                            <FormControlLabel value="Name" control={<Radio />} label="Name" />
-                        </RadioGroup>
-                        {combos.map((t, index) => {
-                            return (<SmallServicePane key={t.id} heading={(idComboView === "ID") ? t.id : t.name}></SmallServicePane>)
-                        })}
-                    </div>
-
+                    <TextField
+                        label="Price"
+                        value={price}
+                        fullWidth
+                        margin='normal'
+                    >
+                    </TextField>
 
                 </div>
+
+                <div className={style.right}>
+                    <div className={style.scrollPane}>
+                        <div className={style.listPane}>
+                            <span className={style.formHeading}><ContentCutIcon /> SERVICES: </span>
+                            <RadioGroup
+                                row
+                                aria-labelledby="demo-row-radio-buttons-group-label"
+                                name="row-radio-buttons-group"
+                                value={idServicesView}
+                                onChange={handleChangeServicesView}
+                            >
+                                <FormControlLabel value="ID" control={<Radio />} label="ID" />
+                                <FormControlLabel value="Name" control={<Radio />} label="Name" />
+                            </RadioGroup>
+                            {services.map((t, index) => {
+                                return (<SmallServicePane key={t.id} heading={(idServicesView === "ID") ? t.id : t.name}></SmallServicePane>)
+                            })}
+                        </div>
+
+                        <div className={style.listPane}>
+                            <span className={style.formHeading}><ContentCutIcon /> Combos: </span>
+                            <RadioGroup
+                                row
+                                aria-labelledby="demo-row-radio-buttons-group-label"
+                                name="row-radio-buttons-group"
+                                value={idComboView}
+                                onChange={handleChangeComboView}
+                            >
+                                <FormControlLabel value="ID" control={<Radio />} label="ID" />
+                                <FormControlLabel value="Name" control={<Radio />} label="Name" />
+                            </RadioGroup>
+                            {combos.map((t, index) => {
+                                return (<SmallServicePane key={t.id} heading={(idComboView === "ID") ? t.id : t.name}></SmallServicePane>)
+                            })}
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
+        </>
     )
 }
 
@@ -275,6 +286,8 @@ export function CreateFormAppointment() {
         setWorkerView(workerID);
         setLocationView(locationID)
     }, [])
+
+    const navigate = useNavigate();
 
     const [searchParams, setSearchParams] = useSearchParams();
 
@@ -378,125 +391,131 @@ export function CreateFormAppointment() {
         setIdComboView(event.target.value);
     };
 
+    React.useEffect(()=> {
+        $(".backArrow").on("click", function() {
+            navigate("/" + $(this).attr("databack"));
+        })
+    }, []);
 
     return (
-        <div className={style.formContainer}>
-            <div className={style.left}>
-                <TextField
-                    label="Customer"
-                    
-                    fullWidth
-                    margin='normal'
-                >
-                </TextField>
-                <RadioGroup
-                    row
-                    aria-labelledby="demo-row-radio-buttons-group-label"
-                    name="row-radio-buttons-group"
-                    value={idCustomerView}
-                    onChange={handleChangeCustomerView}
-                >
-                    <FormControlLabel value="ID" control={<Radio />} label="ID" />
-                    <FormControlLabel value="Name" control={<Radio />} label="Name" />
-                </RadioGroup>
-                <TextField
-                    label="Worker"
-                    value={workerView}
-                    fullWidth
-                    margin='normal'
-                >
-                </TextField>
-                <RadioGroup
-                    row
-                    aria-labelledby="demo-row-radio-buttons-group-label"
-                    name="row-radio-buttons-group"
-                    value={idWorkerView}
-                    onChange={handleChangeWorkerView}
-                >
-                    <FormControlLabel value="ID" control={<Radio />} label="ID" />
-                    <FormControlLabel value="Name" control={<Radio />} label="Name" />
-                </RadioGroup>
+        <>
+            <FontAwesomeIcon databack="appointments" className='backArrow' icon={faLeftLong}></FontAwesomeIcon>
+            <div className={style.formContainer}>
+                <div className={style.left}>
+                    <TextField
+                        label="Customer"
 
-                <TextField
-                    label="Location"
-                    value={locationView}
-                    fullWidth
-                    margin='normal'
-                >
-                </TextField>
-                <RadioGroup
-                    row
-                    aria-labelledby="demo-row-radio-buttons-group-label"
-                    name="row-radio-buttons-group"
-                    value={idLocaionView}
-                    onChange={handleChangeLocationView}
-                >
-                    <FormControlLabel value="ID" control={<Radio />} label="ID" />
-                    <FormControlLabel value="Name" control={<Radio />} label="Name" />
-                </RadioGroup>
+                        fullWidth
+                        margin='normal'
+                    >
+                    </TextField>
+                    <RadioGroup
+                        row
+                        aria-labelledby="demo-row-radio-buttons-group-label"
+                        name="row-radio-buttons-group"
+                        value={idCustomerView}
+                        onChange={handleChangeCustomerView}
+                    >
+                        <FormControlLabel value="ID" control={<Radio />} label="ID" />
+                        <FormControlLabel value="Name" control={<Radio />} label="Name" />
+                    </RadioGroup>
+                    <TextField
+                        label="Worker"
+                        value={workerView}
+                        fullWidth
+                        margin='normal'
+                    >
+                    </TextField>
+                    <RadioGroup
+                        row
+                        aria-labelledby="demo-row-radio-buttons-group-label"
+                        name="row-radio-buttons-group"
+                        value={idWorkerView}
+                        onChange={handleChangeWorkerView}
+                    >
+                        <FormControlLabel value="ID" control={<Radio />} label="ID" />
+                        <FormControlLabel value="Name" control={<Radio />} label="Name" />
+                    </RadioGroup>
 
-                <FormLabel id="demo-radio-buttons-group-label">Status</FormLabel>
-                <RadioGroup
-                    row
-                    aria-labelledby="demo-radio-buttons-group-label"
-                    value={status}
-                    name="radio-buttons-group"
-                >
-                    <FormControlLabel value="WAITING" control={<Radio />} label="WAITING" />
-                    <FormControlLabel value="CANCELLED" control={<Radio />} label="CANCELLED" />
-                    <FormControlLabel value="OVERDUE" control={<Radio />} label="OVERDUE" />
-                    <FormControlLabel value="DONE" control={<Radio />} label="DONE" />
-                </RadioGroup>
+                    <TextField
+                        label="Location"
+                        value={locationView}
+                        fullWidth
+                        margin='normal'
+                    >
+                    </TextField>
+                    <RadioGroup
+                        row
+                        aria-labelledby="demo-row-radio-buttons-group-label"
+                        name="row-radio-buttons-group"
+                        value={idLocaionView}
+                        onChange={handleChangeLocationView}
+                    >
+                        <FormControlLabel value="ID" control={<Radio />} label="ID" />
+                        <FormControlLabel value="Name" control={<Radio />} label="Name" />
+                    </RadioGroup>
 
-                <TextField
-                    label="Price"
-                    value={price}
-                    fullWidth
-                    margin='normal'
-                >
-                </TextField>
+                    <FormLabel id="demo-radio-buttons-group-label">Status</FormLabel>
+                    <RadioGroup
+                        row
+                        aria-labelledby="demo-radio-buttons-group-label"
+                        value={status}
+                        name="radio-buttons-group"
+                    >
+                        <FormControlLabel value="WAITING" control={<Radio />} label="WAITING" />
+                        <FormControlLabel value="CANCELLED" control={<Radio />} label="CANCELLED" />
+                        <FormControlLabel value="OVERDUE" control={<Radio />} label="OVERDUE" />
+                        <FormControlLabel value="DONE" control={<Radio />} label="DONE" />
+                    </RadioGroup>
 
-            </div>
-
-            <div className={style.right}>
-                <div className={style.scrollPane}>
-                    <div className={style.listPane}>
-                        <span className={style.formHeading}><ContentCutIcon /> SERVICES: </span>
-                        <RadioGroup
-                            row
-                            aria-labelledby="demo-row-radio-buttons-group-label"
-                            name="row-radio-buttons-group"
-                            value={idServicesView}
-                            onChange={handleChangeServicesView}
-                        >
-                            <FormControlLabel value="ID" control={<Radio />} label="ID" />
-                            <FormControlLabel value="Name" control={<Radio />} label="Name" />
-                        </RadioGroup>
-                        {services.map((t, index) => {
-                            return (<SmallServicePane key={t.id} heading={(idServicesView === "ID") ? t.id : t.name}></SmallServicePane>)
-                        })}
-                    </div>
-
-                    <div className={style.listPane}>
-                        <span className={style.formHeading}><ContentCutIcon /> Combos: </span>
-                        <RadioGroup
-                            row
-                            aria-labelledby="demo-row-radio-buttons-group-label"
-                            name="row-radio-buttons-group"
-                            value={idComboView}
-                            onChange={handleChangeComboView}
-                        >
-                            <FormControlLabel value="ID" control={<Radio />} label="ID" />
-                            <FormControlLabel value="Name" control={<Radio />} label="Name" />
-                        </RadioGroup>
-                        {combos.map((t, index) => {
-                            return (<SmallServicePane key={t.id} heading={(idComboView === "ID") ? t.id : t.name}></SmallServicePane>)
-                        })}
-                    </div>
-
+                    <TextField
+                        label="Price"
+                        value={price}
+                        fullWidth
+                        margin='normal'
+                    >
+                    </TextField>
 
                 </div>
+
+                <div className={style.right}>
+                    <div className={style.scrollPane}>
+                        <div className={style.listPane}>
+                            <span className={style.formHeading}><ContentCutIcon /> SERVICES: </span>
+                            <RadioGroup
+                                row
+                                aria-labelledby="demo-row-radio-buttons-group-label"
+                                name="row-radio-buttons-group"
+                                value={idServicesView}
+                                onChange={handleChangeServicesView}
+                            >
+                                <FormControlLabel value="ID" control={<Radio />} label="ID" />
+                                <FormControlLabel value="Name" control={<Radio />} label="Name" />
+                            </RadioGroup>
+                            {services.map((t, index) => {
+                                return (<SmallServicePane key={t.id} heading={(idServicesView === "ID") ? t.id : t.name}></SmallServicePane>)
+                            })}
+                        </div>
+
+                        <div className={style.listPane}>
+                            <span className={style.formHeading}><ContentCutIcon /> Combos: </span>
+                            <RadioGroup
+                                row
+                                aria-labelledby="demo-row-radio-buttons-group-label"
+                                name="row-radio-buttons-group"
+                                value={idComboView}
+                                onChange={handleChangeComboView}
+                            >
+                                <FormControlLabel value="ID" control={<Radio />} label="ID" />
+                                <FormControlLabel value="Name" control={<Radio />} label="Name" />
+                            </RadioGroup>
+                            {combos.map((t, index) => {
+                                return (<SmallServicePane key={t.id} heading={(idComboView === "ID") ? t.id : t.name}></SmallServicePane>)
+                            })}
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
+        </>
     )
 }

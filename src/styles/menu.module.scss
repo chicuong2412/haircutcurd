@@ -20,7 +20,7 @@
     .menuItem {
         color: var(--grayText);
         margin-bottom: 10px;
-        padding: 20px 16px;
+        padding: 15px 16px;
         cursor: pointer;
         border-radius: 10px;
 
@@ -28,6 +28,21 @@
             font-size: 20px;
             padding-right: 10px;
         }
+    }
+
+    @media (max-width: 991.98px) {
+        .menuItem {
+            padding: 15px;
+            text-align: center;
+        }
+        overflow: scroll;
+
+        .menuContainer {
+            padding: 0 15px;
+        }
+
+        padding: 0 15px;
+        width: calc(100%);
     }
 
     .logo {
@@ -40,7 +55,7 @@
         border-bottom: 2px solid gray;
 
         img {
-            width: 60px;
+            width: 50px;
         }
     }
 
