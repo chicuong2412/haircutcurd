@@ -21,8 +21,6 @@ import App from './components/App'
 
 // Mount our app.
 ReactDOM.render(
-  <React.StrictMode>
-    <App></App>
-  </React.StrictMode>,
+  <App></App>,
   document.querySelector('#root'),
 )

@@ -259,56 +259,56 @@ export function CustomerCreateForm() {
 
 
     const confirm1 = () => {
-        confirmDialog({
-            message: 'Are you sure you want to proceed?',
-            header: 'Confirmation',
-            icon: 'pi pi-exclamation-triangle',
-            defaultFocus: 'accept',
-            accept() {
-                if (nameCustomer !== "" && username !== "" && password !== "" && doB.isValid() && loyaltyPoint != "") {
-                    $.ajax({
-                        url: `http://localhost:3120/identity/customers`,
-                        type: 'POST',
-                        dataType: 'json',
-                        headers: {
-                            'Authorization': `Bearer ${localStorage.getItem("JWT")}`,
-                        },
-                        data: JSON.stringify({
-                            nameCustomer: nameCustomer,
-                            doB: doB.add(1, 'day').toISOString().substring(0, 10),
-                            username: username,
-                            password: password,
-                            loyaltyPoint: loyaltyPoint,
-                            address: address,
-                            typeCustomer: typeOfCustomer,
-                            email: email,
-                            phoneNumber: phoneNumber
-                        })
-                        ,
-                        CORS: false,
-                        contentType: 'application/json',
-                        secure: true,
-                        async: false,
-                        success: function (data) {
-                            if (data.code === 103) {
-                                toast.current.show({ severity: 'info', summary: 'Confirmed', detail: 'Create successfully', life: 3000 });
-                                navigate("/customers")
-                            } else {
-                                toast.current.show({ severity: 'error', summary: 'Error', detail: data.message, life: 3000 });
-                            }
-                        },
-                        error: function (data) {
+        // confirmDialog({
+        //     message: 'Are you sure you want to proceed?',
+        //     header: 'Confirmation',
+        //     icon: 'pi pi-exclamation-triangle',
+        //     defaultFocus: 'accept',
+        //     accept() {
+        //         if (nameCustomer !== "" && username !== "" && password !== "" && doB.isValid() && loyaltyPoint != "") {
+        //             $.ajax({
+        //                 url: `http://localhost:3120/identity/customers`,
+        //                 type: 'POST',
+        //                 dataType: 'json',
+        //                 headers: {
+        //                     'Authorization': `Bearer ${localStorage.getItem("JWT")}`,
+        //                 },
+        //                 data: JSON.stringify({
+        //                     nameCustomer: nameCustomer,
+        //                     doB: doB.add(1, 'day').toISOString().substring(0, 10),
+        //                     username: username,
+        //                     password: password,
+        //                     loyaltyPoint: loyaltyPoint,
+        //                     address: address,
+        //                     typeCustomer: typeOfCustomer,
+        //                     email: email,
+        //                     phoneNumber: phoneNumber
+        //                 })
+        //                 ,
+        //                 CORS: false,
+        //                 contentType: 'application/json',
+        //                 secure: true,
+        //                 async: false,
+        //                 success: function (data) {
+        //                     if (data.code === 103) {
+        //                         toast.current.show({ severity: 'info', summary: 'Confirmed', detail: 'Create successfully', life: 3000 });
+        //                         navigate("/customers")
+        //                     } else {
+        //                         toast.current.show({ severity: 'error', summary: 'Error', detail: data.message, life: 3000 });
+        //                     }
+        //                 },
+        //                 error: function (data) {
 
-                        }
-                    })
-                } else {
-                    toast.current.show({ severity: 'error', summary: 'Error', detail: 'Please, fill in the required inputs', life: 3000 });
-                }
-            },
-            reject() {
-                toast.current.show({ severity: 'warn', summary: 'Rejected', detail: 'You have rejected', life: 3000 });
-            }
-        });
+        //                 }
+        //             })
+        //         } else {
+        //             toast.current.show({ severity: 'error', summary: 'Error', detail: 'Please, fill in the required inputs', life: 3000 });
+        //         }
+        //     },
+        //     reject() {
+        //         toast.current.show({ severity: 'warn', summary: 'Rejected', detail: 'You have rejected', life: 3000 });
+        //     }
+        // });
     };
 
     const typeCustomer = [

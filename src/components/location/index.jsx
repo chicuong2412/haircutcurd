@@ -13,10 +13,9 @@ import { Dialog } from 'primereact/dialog';
 import FormModel from '../Form/FormModel';
 import $ from 'jquery'
 
-export default function Product() {
-
+export default function Location() {
     const [id, setId] = useState("");
-    const link = "http://localhost:3120/identity/products"
+    const link = "http://localhost:3120/identity/locations"
     const [visible, setVisible] = useState(false);
     const [typeDialog, setTypeDialog] = useState("View");
     const [options, setOptions] = useState([]);
@@ -30,6 +29,13 @@ export default function Product() {
     }
 
     const confirm1 = (data) => {
+        console.log(typeof data.openHour);
+        let openHour = ''
+        if (typeof data.openHour === "string") {
+            openHour = data.openHour;
+        } else {
+            openHour = `${(data.openHour.hour() < 10) ? "0" : ""}${data.openHour.hour()}:${(data.openHour.minute() < 10) ? "0" : ""}${data.openHour.minute()}`
+        }
         confirmDialog({
             message: 'Are you sure you want to proceed?',
             header: 'Confirmation',
@@ -45,7 +51,8 @@ export default function Product() {
                     },
                     data: JSON.stringify(
                         {
-                            ...data
+                            ...data,
+                            openHour: openHour
                         }
                     )
                     ,
@@ -76,11 +83,9 @@ export default function Product() {
         });
 
     };
-
     return (
-        // <Routes>
-        //     <Route path='/' element={
         <>
+            {/* <Route path='/' element={ */}
             <Dialog visible={visible} modal header={headerElement(typeDialog)} style={{ width: '50rem' }} onHide={() => { if (!visible) return; setVisible(false); }}>
                 <FormModel
                     id={id}
@@ -117,8 +122,8 @@ export default function Product() {
                             }
                         }
                     }, {
-                        name: "Description",
-                        valueName: "description",
+                        name: "Address",
+                        valueName: "address",
                         type: "TextField",
                         size: 6,
                         editable: true,
@@ -129,11 +134,10 @@ export default function Product() {
                             }
                         }
                     }, {
-                        name: "Quantity",
-                        valueName: "stockQuantity",
+                        name: "Phone number",
+                        valueName: "phoneNumber",
                         type: "TextField",
-                        size: 4,
-                        number: "int",
+                        size: 6,
                         editable: true,
                         rules: {
                             required: {
@@ -142,29 +146,27 @@ export default function Product() {
                             }
                         }
                     }, {
-                        name: "Rate",
-                        valueName: "rate",
+                        name: "Email",
+                        valueName: "email",
                         type: "TextField",
-                        size: 4,
+                        size: 6,
                         editable: true,
-                        number: "float",
-                        defaultValue: 0
                     }, {
-                        name: "Price",
-                        valueName: "price",
-                        type: "TextField",
-                        size: 4,
-                        number: "int",
+                        name: "Open Hour",
+                        valueName: "openHour",
+                        type: "TimeField",
+                        size: 6,
                         editable: true,
                         rules: {
                             required: {
                                 value: true,
                                 message: "Can't leave this field blank"
                             }
-                        }
+                        },
+                        defaultValue: "08:00:00"
                     },
                     ]}
-                    link={link + "/getProductByID"}
+                    link={link + "/getLocation"}
                 >
                 </FormModel>
             </Dialog>
@@ -173,10 +175,11 @@ export default function Product() {
                     { headerName: "ID", field: "id", resizable: true },
                     { field: "name", resizable: true },
                     { field: "imgSrc", resizable: true },
-                    { headerName: "Quantity", field: "stockQuantity" },
-                    { field: "description", resizable: true },
-                    { field: "price" },
-                    { field: "rate" },
+                    { headerName: "Address", field: "address", resizable: true },
+                    { field: "city", resizable: true },
+                    { field: "phoneNumber", resizable: true },
+                    { field: "email", resizable: true },
+                    { field: "openHour", resizable: true },
                     {
                         headerName: "Deleted", field: "deleted", cellRendererFramework: (params) =>
                             <Checkbox disabled checked={params.data.deleted}></Checkbox>
@@ -193,18 +196,19 @@ export default function Product() {
                         }
                     }
                 ]}
-                link={"http://localhost:3120/identity/products/getProducts"}
-                nameLink={"products"}
-                chartField={["id", "stockQuantity", "price", "rate"]}
+                link={"http://localhost:3120/identity/locations/getLocations"}
+                nameLink={"locations"}
+                chartField={["id", "duration", "price", "rate"]}
                 setId={setId}
                 setVisible={setVisible}
                 setTypeDialog={setTypeDialog}
             ></Table>
+
         </>
-        // }></Route>
-        // <Route path='/view/*' element={<ProductForm></ProductForm>}></Route>
-        // <Route path='/create/*' element={<ProductCreateForm></ProductCreateForm>}></Route>
-        // <Route path='/edit/*' element={<EditingProductForm></EditingProductForm>}></Route>
+        //         }></Route>
+        //     <Route path='/view/*' element={<LocationForm></LocationForm>}></Route>
+        //     <Route path='/create/*' element={<LocationCreateForm></LocationCreateForm>}></Route>
+        //     <Route path='/edit/*' element={<EditingLocationForm></EditingLocationForm>}></Route>
         // </Routes>
     )
 }

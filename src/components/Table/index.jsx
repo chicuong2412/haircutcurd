@@ -14,7 +14,8 @@ import { confirmDialog } from 'primereact/confirmdialog'; // To use confirmDialo
 
 import $ from "jquery"
 import { useNavigate } from 'react-router-dom';
-import { ProvidedColumnGroup } from 'ag-grid-enterprise';
+
+import { memo } from 'react';
 
 const defaultColDef = {
     sortable: true,
@@ -35,6 +36,7 @@ function setData(link, params) {
         secure: true,
         async: true,
         success: function (data) {
+            params.api.setRowData([]);
             params.api.applyTransaction({ add: data.result })
         }
     });
@@ -42,12 +44,12 @@ function setData(link, params) {
 
 
 
-export default function Table({ colDefsIn, link, nameLink, chartField, setTypeDialog, setId, setVisible }) {
+export default memo(function Table({ colDefsIn, link, nameLink, chartField, setTypeDialog, setId, setVisible }) {
     const [colDefs, setColDefs] = useState(colDefsIn);
     const [gridApi, setGridApi] = useState({});
     const { toast } = useInfo();
     const [reset, setReset] = useState(0);
-    
+
     const navigate = useNavigate();
 
     const applyQuickFilter = (e) => {
@@ -75,6 +77,13 @@ export default function Table({ colDefsIn, link, nameLink, chartField, setTypeDi
             chartType: "groupedColumn",
         });
     }, []);
+    
+    useEffect(() => {
+        if (gridApi.type === "gridReady") {
+            setData(link, gridApi)
+        }
+    })
+
 
     const onGridReady = (params) => {
         gridApi.api = params.api;
@@ -82,21 +91,24 @@ export default function Table({ colDefsIn, link, nameLink, chartField, setTypeDi
         gridApi.columnApi = params.columnApi;
         gridApi.context = params.context;
 
+
         setData(link, params);
 
         $(`.${nameLink}Table`).on("click", ".view", function () {
-            // navigate(`/${nameLink}/view?id=${$(this).attr("dataid")}`);
             setId($(this).attr("dataid"));
             setVisible(true);
             setTypeDialog("View");
         });
 
         $(`.${nameLink}Table`).on("click", ".edit", function () {
-            navigate(`/${nameLink}/edit?id=${$(this).attr("dataid")}`);
+            setId($(this).attr("dataid"));
+            setVisible(true);
+            setTypeDialog("Edit");
         });
 
         $(`.${nameLink}CreateButton`).on("click", function () {
-            navigate(`/${nameLink}/create`)
+            setVisible(true);
+            setTypeDialog("Create");
         });
 
         $(`.chart`).on("click", function () {
@@ -123,7 +135,6 @@ export default function Table({ colDefsIn, link, nameLink, chartField, setTypeDi
                         secure: true,
                         async: false,
                         success: function (data) {
-                            console.log(data);
                             if (data.code === 104) {
                                 const rowData = [];
                                 gridApi.api.forEachNode(function (node) {
@@ -155,6 +166,7 @@ export default function Table({ colDefsIn, link, nameLink, chartField, setTypeDi
 
 
     }
+    
     return (
         <div>
             <ConfirmDialog></ConfirmDialog>
@@ -237,4 +249,4 @@ export default function Table({ colDefsIn, link, nameLink, chartField, setTypeDi
             </div>
         </div>
     )
-}
+});

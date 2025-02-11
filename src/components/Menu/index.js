@@ -13,14 +13,14 @@ import logo from "../../assets/img/logo.png"
 
 export default function Menu() {
   var { menuItem, setMenuItem } = useInfo();
-  const {setIsLogged} = useMain();
+  const { setIsLogged } = useMain();
   const navigate = useNavigate();
   React.useEffect(() => {
 
     $(`ul`).on("click", "li", function () {
-      var type = $(this).attr("typeNode");
+      var type = $(this).attr("typenode");
       if (type === "page") {
-        var url = $(this).attr("dataNavigate");
+        var url = $(this).attr("datanavigate");
         navigate(`/${url}`);
       } else {
 
@@ -28,7 +28,7 @@ export default function Menu() {
 
     })
 
-    $(".loggout").on("click", function() {
+    $(".loggout").on("click", function () {
       setIsLogged(false);
       localStorage.removeItem("JWT");
       localStorage.removeItem("ID");
@@ -51,14 +51,14 @@ export default function Menu() {
       </div>
       <ul className={style.menuContainer}>
         {/* <li tabIndex={0} className={`${style.menuItem} ${(pathName.indexOf("/myinfo") != -1) ? style.active : ""}`} typeNode="page" dataNavigate="myinfo"><span className={style.iconMenu}><FontAwesomeIcon icon={faUser} /></span>My information</li> */}
-        <li tabIndex={1} className={`${style.menuItem} ${(pathName.toLowerCase().indexOf("/customers") != -1) ? style.active : ""}`} typeNode="page" dataNavigate="customers"><span className={style.iconMenu}><FontAwesomeIcon icon={faPersonMilitaryPointing} /></span>Customers</li>
-        <li tabIndex={2} className={`${style.menuItem} ${(pathName.toLowerCase().indexOf("/workers") != -1) ? style.active : ""}`} typeNode="page" dataNavigate="workers"><span className={style.iconMenu}><FontAwesomeIcon icon={faUsers} /></span>Employees</li>
-        <li tabIndex={3} className={`${style.menuItem} ${(pathName.toLowerCase().indexOf("/appointments") != -1) ? style.active : ""}`} typeNode="page" dataNavigate="appointments"><span className={style.iconMenu}><FontAwesomeIcon icon={faCalendarCheck} /></span>Appointment</li>
-        <li tabIndex={4} className={`${style.menuItem} ${(pathName.toLowerCase().indexOf("/products") != -1) ? style.active : ""}`} typeNode="page" dataNavigate="products"><span className={style.iconMenu} ><FontAwesomeIcon icon={faProductHunt} /></span>Products</li>
-        <li tabIndex={5} className={`${style.menuItem} ${(pathName.toLowerCase().indexOf("/services") != -1) ? style.active : ""}`} typeNode="page" dataNavigate="services"><span className={style.iconMenu} ><FontAwesomeIcon icon={faRulerCombined} /></span>Services</li>
-        <li tabIndex={5} className={`${style.menuItem} ${(pathName.toLowerCase().indexOf("/combos") != -1) ? style.active : ""}`} typeNode="page" dataNavigate="combos"><span className={style.iconMenu} ><FontAwesomeIcon icon={faRulerCombined} /></span>Combos</li>
-        <li tabIndex={5} className={`${style.menuItem} ${(pathName.toLowerCase().indexOf("/locations") != -1) ? style.active : ""}`} typeNode="page" dataNavigate="locations"><span className={style.iconMenu} ><FontAwesomeIcon icon={faLocationDot} /></span>Location</li>
-        <li className={`${style.menuItem} loggout`} typeNode="function"><span className={style.iconMenu}><FontAwesomeIcon icon={faRightFromBracket} /></span>Log out</li>
+        <li tabIndex={1} className={`${style.menuItem} ${(pathName.toLowerCase().indexOf("/customers") != -1) ? style.active : ""}`} typenode="page" datanavigate="customers"><span className={style.iconMenu}><FontAwesomeIcon icon={faPersonMilitaryPointing} /></span>Customers</li>
+        <li tabIndex={2} className={`${style.menuItem} ${(pathName.toLowerCase().indexOf("/workers") != -1) ? style.active : ""}`} typenode="page" datanavigate="workers"><span className={style.iconMenu}><FontAwesomeIcon icon={faUsers} /></span>Employees</li>
+        <li tabIndex={3} className={`${style.menuItem} ${(pathName.toLowerCase().indexOf("/appointments") != -1) ? style.active : ""}`} typenode="page" datanavigate="appointments"><span className={style.iconMenu}><FontAwesomeIcon icon={faCalendarCheck} /></span>Appointment</li>
+        <li tabIndex={4} className={`${style.menuItem} ${(pathName.toLowerCase().indexOf("/products") != -1) ? style.active : ""}`} typenode="page" datanavigate="products"><span className={style.iconMenu} ><FontAwesomeIcon icon={faProductHunt} /></span>Products</li>
+        <li tabIndex={5} className={`${style.menuItem} ${(pathName.toLowerCase().indexOf("/services") != -1) ? style.active : ""}`} typenode="page" datanavigate="services"><span className={style.iconMenu} ><FontAwesomeIcon icon={faRulerCombined} /></span>Services</li>
+        <li tabIndex={5} className={`${style.menuItem} ${(pathName.toLowerCase().indexOf("/combos") != -1) ? style.active : ""}`} typenode="page" datanavigate="combos"><span className={style.iconMenu} ><FontAwesomeIcon icon={faRulerCombined} /></span>Combos</li>
+        <li tabIndex={5} className={`${style.menuItem} ${(pathName.toLowerCase().indexOf("/locations") != -1) ? style.active : ""}`} typenode="page" datanavigate="locations"><span className={style.iconMenu} ><FontAwesomeIcon icon={faLocationDot} /></span>Location</li>
+        <li className={`${style.menuItem} loggout`} typenode="function"><span className={style.iconMenu}><FontAwesomeIcon icon={faRightFromBracket} /></span>Log out</li>
       </ul>
     </nav >
   )
