@@ -74,6 +74,7 @@
     "@mui/x-date-pickers": "^7.23.1",
     "ag-grid-enterprise": "^28.1.1",
     "ag-grid-react": "^28.1.1",
+    "bootstrap": "^5.3.3",
     "dayjs": "^1.11.13",
     "haircutcurd": "file:../haircutcurd",
     "jquery": "^3.7.1",

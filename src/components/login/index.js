@@ -42,7 +42,7 @@ export default function index() {
         if (password !== "" && username !== "") {
             setHasWrong(false);
             $.ajax({
-                url: "http://localhost:3120/identity/auth/workers/login",
+                url: "http://localhost:3120/identity/auth/login",
                 type: 'POST',
                 dataType: 'json',
                 CORS: false,

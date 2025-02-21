@@ -280,7 +280,7 @@ module.exports = (env, argv) => ({
 */
 {
   test: /\.(png|svg|jpg|gif)$/,
-    include: path.resolve(__dirname, 'src/assets'),
+    include: path.resolve(__dirname, 'src/'),
       use: [
         {
           loader: 'file-loader',

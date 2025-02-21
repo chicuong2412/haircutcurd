@@ -67,11 +67,11 @@ export default function Appointment() {
                 setOptionCombos([...data.result]);
             },
             error: function (data) {
-                setOptions([]);
+                // setOptions([]);
             }
         })
         $.ajax({
-            url: `http://localhost:3120/identity/workers/getAllWorkers`,
+            url: `${localStorage.getItem("ROLE").includes("ADMIN") ? "http://localhost:3120/identity/workers/getAllWorkers" : "http://localhost:3120/identity/workers/getAllPublicWorkers"}`,
             type: 'GET',
             dataType: 'json',
             headers: {
@@ -85,7 +85,7 @@ export default function Appointment() {
                 setOptionWorkers([...data.result]);
             },
             error: function (data) {
-                setOptions([]);
+                // setOptions([]);
             }
         })
         $.ajax({
@@ -103,7 +103,7 @@ export default function Appointment() {
                 setOptionCustomers([...data.result]);
             },
             error: function (data) {
-                setOptions([]);
+                // setOptions([]);
             }
         })
 
@@ -122,7 +122,7 @@ export default function Appointment() {
                 setOptionLocations([...data.result]);
             },
             error: function (data) {
-                setOptions([]);
+                // setOptions([]);
             }
         })
     }, []);
@@ -179,7 +179,9 @@ export default function Appointment() {
                         }
                     },
                     error: function (data) {
-                        toast.current.show({ severity: 'error', summary: 'Error', detail: data.message, life: 3000 });
+                        console.log(data);
+                        
+                        toast.current.show({ severity: 'error', summary: 'Error', detail: data.responseJSON.message, life: 3000 });
                         // setVisible(false);
                     }
                 })

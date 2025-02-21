@@ -12,13 +12,13 @@ function check(value, listCheck) {
 }
 
 export default function List({ options, setValue, value, editable }) {
-    if (value === undefined) {
+    if (value === undefined 
+        || typeof value !== "object"
+    ) {
         return (<></>);
     }
-
     const [source, setSource] = useState(() => {
         let finalOptions = [];
-
         for (let i of options) {
             if (check(i, value)) {
                 finalOptions.push(i);
@@ -27,7 +27,9 @@ export default function List({ options, setValue, value, editable }) {
 
         return [...finalOptions];
     });
-    const [target, setTarget] = useState([...value]);
+    const [target, setTarget] = useState(() => {
+        return [...value]
+    });    
 
     const itemTemplate = (item) => {
         return (
@@ -48,7 +50,7 @@ export default function List({ options, setValue, value, editable }) {
     };
 
     return (
-        <div className="card">
+        <div className="cardA">
             <PickList dataKey="id" source={source} filter filterBy="name" target={target}  onChange={onChange} itemTemplate={itemTemplate} breakpoint="1280px"
                 sourceHeader="Available" targetHeader="Selected" sourceStyle={{ height: '24rem' }} targetStyle={{ height: '24rem' }} />
         </div>

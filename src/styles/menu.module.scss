@@ -20,7 +20,7 @@
     .menuItem {
         color: var(--grayText);
         margin-bottom: 10px;
-        padding: 15px 16px;
+        padding: 15px 16px !important;
         cursor: pointer;
         border-radius: 10px;
 
@@ -45,9 +45,9 @@
         width: calc(100%);
     }
 
-    .logo {
+    .logoDashBoard {
         text-align: center;
-        width: 60%;
+        width: 60% !important;
         margin-left: auto;
         margin-right: auto;
         padding-top: 30px;

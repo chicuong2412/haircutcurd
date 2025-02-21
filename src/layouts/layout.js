@@ -10,7 +10,7 @@ import ProductPage from '../pages/ProductPage'
 import ServicePage from '../pages/ServicePage'
 import $ from "jquery"
 import { Toast } from 'primereact/toast'
-import {useRef} from "react"
+import { useRef } from "react"
 import CustomerPage from '../pages/CustomerPage'
 import Combo from '../components/combo'
 import LocationPage from '../pages/LocationPage'
@@ -46,7 +46,7 @@ export default function Layout() {
         <MenuChosen.Provider value={{ menuItem, setMenuItem, toast }}>
             <Toast ref={toast}></Toast>
             <div className='layoutContainer'>
-                <div className='leftSide' style={{display: `${(flagMenu) ? "block":"none"}`}}>
+                <div className='leftSide' style={{ display: `${(flagMenu) ? "block" : "none"}` }}>
                     <Menu></Menu>
                     <div className='menuButton mobileButtonClose'><FontAwesomeIcon icon={faRectangleXmark}></FontAwesomeIcon></div>
                 </div>
@@ -55,22 +55,29 @@ export default function Layout() {
                         <AboveBar></AboveBar>
                     </div>
                     <div className='bottomBar'>
-                        <Routes>
-                            <Route path='/myinfo'></Route>
-                            <Route path='/' element={<Navigate to={"myinfo"}></Navigate>}></Route>
-                            <Route path='/appointments/*' element={<AppointmentPage />}></Route>
-                            <Route path='/workers/*' element={<EmployeePage />}></Route>
-                            <Route path='/combos/*' element={<Combo />}></Route>
-                            <Route path='/products/*' element={<ProductPage />}></Route>
-                            <Route path='/services/*' element={<ServicePage></ServicePage>}></Route>
-                            <Route path='/customers/*' element={<CustomerPage></CustomerPage>}></Route>
-                            <Route path='/locations/*' element={<LocationPage></LocationPage>}></Route>
-                        </Routes>
+                        {
+                            (localStorage.getItem("ROLE").includes("ADMIN") ?
+                                <Routes>
+                                    <Route path='/myinfo'></Route>
+                                    <Route path='/' element={<Navigate to={"myinfo"}></Navigate>}></Route>
+                                    <Route path='/appointments/*' element={<AppointmentPage />}></Route>
+                                    <Route path='/workers/*' element={<EmployeePage />}></Route>
+                                    <Route path='/combos/*' element={<Combo />}></Route>
+                                    <Route path='/products/*' element={<ProductPage />}></Route>
+                                    <Route path='/services/*' element={<ServicePage></ServicePage>}></Route>
+                                    <Route path='/customers/*' element={<CustomerPage></CustomerPage>}></Route>
+                                    <Route path='/locations/*' element={<LocationPage></LocationPage>}></Route>
+                                </Routes> : ((localStorage.getItem("ROLE").includes("MANAGER") ? <>
+                                    <Routes>
+                                        <Route path='/myinfo'></Route>
+                                        <Route path='/' element={<Navigate to={"myinfo"}></Navigate>}></Route>
+                                        <Route path='/appointments/*' element={<AppointmentPage />}></Route>
+                                        <Route path='/workers/*' element={<EmployeePage />}></Route>
+                                    </Routes>
+                                </> : <></>)))
+                        }
                     </div>
-
                 </div>
-
-
             </div>
         </MenuChosen.Provider>
     )
