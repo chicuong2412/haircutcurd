@@ -1,7 +1,7 @@
 import React from 'react'
 
-export default function SmallServicePane(props) {
+export default function SmallServicePane({heading}) {
     return (
-        <div className="paneHolder">{props.heading}</div>
+        <div className="paneHolder">{heading}</div>
     )
 }

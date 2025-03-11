@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback, useMemo, useRef, useState } from 'react'
 import LocationPane from '../LocationPane/LocationPane';
 import { useEffect } from 'react';
 import $ from 'jquery'
@@ -21,18 +21,35 @@ export default function LocationChoosing() {
     const { changeLocation } = useInfo()
     const { dataLocation } = useInfo()
 
+    const [searchField, setSearchField] = useState("");
+
+    const data = useMemo(
+        () => {
+        return [...dataLocation].filter((location) => {
+            return location.name.toLowerCase().includes(searchField.toLowerCase())
+                || location.address.toLowerCase().includes(searchField.toLowerCase())
+                || searchField === ""
+        })
+    }, [searchField, dataLocation])
+
     const navigate = useNavigate()
+
+    const ref = useRef(null)
 
     useEffect(() => {
         $(".table").on("click", ".paneClick", function (event) {
             changeLocation($(this).attr("id"))
-            navigate('/booking')
+            navigate(-1)
         })
 
         $(".backIcon").on("click", function () {
-            navigate('/booking')
+            navigate(-1)
         })
     }, [])
+
+    const searching = () => {
+        setSearchField(ref.current.value)
+    }
 
     return (
         <div className='holdMainInfo'>
@@ -42,10 +59,16 @@ export default function LocationChoosing() {
                     <h1 className='heading'>Choosing location</h1>
                     <div className='searchField'>
                         <div className="input-group mb-0">
-                            <input type="text" className="form-control" placeholder="Search by Name"></input>
+                            <input ref={ref} onKeyDown={(e) => {
+                                if (e.key === "Enter") {
+                                    searching();
+                                }
+                            }} type="text" className="form-control" placeholder="Search by Name"></input>
                             <div className="input-group-append">
                                 <button className="btn btn-outline-secondary noBorderSearch" type="button"
-                                    id="button-addon2">Search</button>
+                                    id="button-addon2" onClick={() => {
+                                        searching()
+                                    }}>Search</button>
                             </div>
                         </div>
                     </div>
@@ -53,7 +76,7 @@ export default function LocationChoosing() {
                 <div className='resultSearch'>
                     <div className='table'>
                         {
-                            dataLocation.map((value) =>
+                            data.map((value) =>
                                 <LocationPane
                                     id={value.id}
                                     address={value.name}

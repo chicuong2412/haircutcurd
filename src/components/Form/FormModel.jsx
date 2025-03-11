@@ -1,5 +1,5 @@
 import { Grid2, TextField } from '@mui/material'
-import React, { useEffect } from 'react'
+import React, { memo, useEffect } from 'react'
 import $ from "jquery"
 import dayjs from 'dayjs';
 import "dayjs/locale/en-gb"
@@ -19,12 +19,9 @@ import List from '../List/List';
 
 const updateNumber = (e, setValue, value) => {
     const val = (value !== undefined) ? e.target.value : "";
-    // If the current value passes the validity test then apply that to state
+
     if (new RegExp("^[0-9]*$").test(val)) setValue(val);
-    // If the current val is just the negation sign, or it's been provided an empty string,
-    // then apply that value to state - we still have to validate this input before processing
-    // it to some other component or data structure, but it frees up our input the way a user
-    // would expect to interact with this component
+
     else if (val === '-') setValue(val);
 
 }
@@ -43,7 +40,7 @@ const updateFloatNumber = (e, setValue, preValue) => {
 }
 
 
-function Components({ type, value, name, options, setValue, editable, number, typeForm, invalid, error, label }) {
+function Components({ type, value, name, options, setValue, editable, number, typeForm, invalid, error, label, width }) {
     if (type === "TextField") {
         return (
             <TextField
@@ -117,9 +114,9 @@ function Components({ type, value, name, options, setValue, editable, number, ty
                 return (
                     <div>
                         <div>{option?.id}</div>
-                        <div>{option[`${(label !== undefined) ? label:"name"}`]}</div>
-                        {(option.location !== undefined) ? <div>Location: {option.location?.id}</div>: ""}
-                        {(option.location !== undefined) ? <div>Location: {option.location?.name}</div>: ""}
+                        <div>{option[`${(label !== undefined) ? label : "name"}`]}</div>
+                        {(option.location !== undefined) ? <div>Location: {option.location?.id}</div> : ""}
+                        {(option.location !== undefined) ? <div>Location: {option.location?.name}</div> : ""}
                     </div>
                 );
             } else {
@@ -150,8 +147,8 @@ function Components({ type, value, name, options, setValue, editable, number, ty
 
             return <span>{props.placeholder}</span>;
         };
-        
-        
+
+
         return (
             <div style={{ height: "100%", display: "flex", alignItems: "center", gap: "5px" }}>
                 <FormLabel style={{ height: "fit-content" }} id="demo-radio-buttons-group-label">{name}: </FormLabel>
@@ -168,7 +165,7 @@ function Components({ type, value, name, options, setValue, editable, number, ty
                     itemTemplate={optionTemplate}
                     filterBy={"id,label,nameWorker,value,location.id,location.name,name,username,nameCustomer"}
                     filter
-                    optionLabel={`${(label !== undefined) ? label:"name"}`}
+                    optionLabel={`${(label !== undefined) ? label : "name"}`}
                     placeholder="Select an option"
                 ></Dropdown>
             </div>
@@ -200,15 +197,42 @@ function Components({ type, value, name, options, setValue, editable, number, ty
                 </DemoContainer>
             </LocalizationProvider>
         )
+    } else if (type === "file") {
+        const uploadURL = async (event) => {
+            var file = event.target.files[0];
+
+            try {
+                var link = URL.createObjectURL(file)
+                setValue(link);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+
+        return (
+            <>
+                <div className="imageForm flex flex-column" style={{ alignItems: "center", width: "100%", justifySelf: "center" }}>
+                    <img className=" mt-5" referrerPolicy='no-referrer' width={`${(width !== undefined) ? width : 150}px`} src={(value !== "") ? value : value} />
+                    <label for={"actual-btn"} id='chooseFile'>Choose file</label>
+                    <input id="actual-btn" className='customFileInput' type='file' accept='image/*' onChange={(event) => {
+                        uploadURL(event)
+                    }} />
+                </div>
+            </>
+        )
+    } else {
+        return (
+            <></>
+        )
     }
 }
 
-export default function FormModel({ id, listInputs, link, typeForm, confirm }) {
+export default memo(function FormModel({ id, listInputs, link, typeForm, confirm }) {
     const { handleSubmit, control, setValue, getValues } = useForm();
     useEffect(() => {
         if (typeForm == "edit" || typeForm === "view") {
             $.ajax({
-                url: `${link}/${id}`,
+                url: `${link}${(id) ? "/" : ""}${id}`,
                 type: 'GET',
                 dataType: 'json',
                 headers: {
@@ -220,11 +244,22 @@ export default function FormModel({ id, listInputs, link, typeForm, confirm }) {
                 async: false,
                 success: function (data) {
                     for (let i of listInputs) {
-                        if (data.result.hasOwnProperty(i.valueName) == true) {
-                            if (i.getObject) {
-                                setValue(i.valueName, objectGetByID(i, Object.getOwnPropertyDescriptor(data.result, i.valueName).value));
-                            } else
-                                setValue(i.valueName, Object.getOwnPropertyDescriptor(data.result, i.valueName).value);
+                        if (i.stack !== undefined && i.stack) {
+                            i.listStacks.forEach(element => {
+                                if (data.result.hasOwnProperty(element.valueName) == true) {
+                                    if (element.getObject) {
+                                        setValue(element.valueName, objectGetByID(element, Object.getOwnPropertyDescriptor(data.result, element.valueName).value));
+                                    } else
+                                        setValue(element.valueName, Object.getOwnPropertyDescriptor(data.result, element.valueName).value);
+                                }
+                            });
+                        } else {
+                            if (data.result.hasOwnProperty(i.valueName) == true) {
+                                if (i.getObject) {
+                                    setValue(i.valueName, objectGetByID(i, Object.getOwnPropertyDescriptor(data.result, i.valueName).value));
+                                } else
+                                    setValue(i.valueName, Object.getOwnPropertyDescriptor(data.result, i.valueName).value);
+                            }
                         }
                     }
                 },
@@ -252,41 +287,79 @@ export default function FormModel({ id, listInputs, link, typeForm, confirm }) {
             })}>
                 <Grid2 container spacing={1} sx={{ marginBottom: "20px", paddingTop: "10px" }}>
                     {listInputs.map((item, index) => {
-                        return (
-                            <Grid2 size={item.size} key={index}>
-                                <Controller
-                                    control={control}
-                                    name={`${item.valueName}`}
-                                    rules={item.rules}
-                                    defaultValue={item.defaultValue ?? ""}
-                                    render={({ field: { onChange, onblur, value }, fieldState: { invalid, error } }) => {
+                        if (item.stack !== undefined && item.stack) {
+                            return (
+                                <Grid2 container size={item.size} key={index} sx={item.sx}>
+                                    {item.listStacks.map((itemCons, index) => {
                                         return (
-                                            <Components
-                                                type={item.type}
-                                                value={value}
-                                                name={item.name}
-                                                options={item.options}
-                                                setValue={onChange}
-                                                editable={(typeForm === "view") ? false : item.editable}
-                                                number={item.number}
-                                                typeForm={typeForm}
-                                                error={error}
-                                                invalid={invalid}
-                                                label={item.label}
-                                            ></Components>)
-                                    }}
-                                ></Controller>
-                            </Grid2>
-                        )
+                                            <Grid2 size={itemCons.size} key={index} sx={item.sx}>
+                                                <Controller
+                                                    control={control}
+                                                    name={`${itemCons.valueName}`}
+                                                    rules={itemCons.rules}
+                                                    defaultValue={itemCons.defaultValue ?? ""}
+                                                    render={({ field: { onChange, value }, fieldState: { invalid, error } }) => {
+                                                        return (
+                                                            <Components
+                                                                type={itemCons.type}
+                                                                value={value}
+                                                                name={itemCons.name}
+                                                                options={itemCons.options}
+                                                                setValue={onChange}
+                                                                editable={(typeForm === "view") ? false : itemCons.editable}
+                                                                number={itemCons.number}
+                                                                typeForm={typeForm}
+                                                                error={error}
+                                                                invalid={invalid}
+                                                                label={item.label}
+                                                                width={item.width}
+                                                            ></Components>)
+                                                    }}
+                                                ></Controller>
+                                            </Grid2>
+                                        )
+                                    })}
+                                </Grid2>
+                            )
+                        } else {
+                            {/* console.log(item) */}
+                            return (
+                                <Grid2 size={item.size} key={index} sx={item.sx}>
+                                    <Controller
+                                        control={control}
+                                        name={`${item.valueName}`}
+                                        rules={item.rules}
+                                        defaultValue={item.defaultValue ?? ""}
+                                        render={({ field: { onChange, onblur, value }, fieldState: { invalid, error } }) => {
+                                            return (
+                                                <Components
+                                                    type={item.type}
+                                                    value={value}
+                                                    name={item.name}
+                                                    options={item.options}
+                                                    setValue={onChange}
+                                                    editable={(typeForm === "view") ? false : item.editable}
+                                                    number={item.number}
+                                                    typeForm={typeForm}
+                                                    error={error}
+                                                    invalid={invalid}
+                                                    label={item.label}
+                                                    width={item.width}
+                                                ></Components>)
+                                        }}
+                                    ></Controller>
+                                </Grid2>
+                            )
+                        }
                     })}
 
                 </Grid2>
-                {(typeForm === "edit") ? (<Button type='submit' variant="contained" endIcon={<SendIcon />} autoFocus>
+                {(typeForm === "edit") ? (<Button type='submit' variant="contained" endIcon={<SendIcon />}>
                     UPDATE
-                </Button>) : (typeForm === "create") ? (<Button type='submit' variant="contained" endIcon={<SendIcon />} autoFocus>
+                </Button>) : (typeForm === "create") ? (<Button type='submit' variant="contained" endIcon={<SendIcon />}>
                     CREATE
                 </Button>) : ""}
             </form>
         </>
     )
-}
+});

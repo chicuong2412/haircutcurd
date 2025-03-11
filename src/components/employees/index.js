@@ -5,13 +5,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPenToSquare, faEye } from '@fortawesome/free-regular-svg-icons';
 import { faX } from '@fortawesome/free-solid-svg-icons';
 import style from "../../styles/FormStyle.module.scss"
-import { useInfo } from '../../layouts/layout'
 import { confirmDialog } from 'primereact/confirmdialog';
 import DialogHeader from '../DialogHeader/DialogHeader'
 import { Dialog } from 'primereact/dialog';
 import FormModel from '../Form/FormModel';
 import dayjs from 'dayjs';
 import $ from 'jquery'
+import { getContentBase64 } from '../../utils/Functions';
+import { useMain } from '../App';
 
 
 export default function Employee() {
@@ -23,7 +24,7 @@ export default function Employee() {
 
     const [options, setOptions] = useState([]);
 
-    const { toast } = useInfo();
+    const { toast } = useMain();
 
     const headerElement = (Type) => {
         return (
@@ -53,7 +54,7 @@ export default function Employee() {
         })
     }, []);
 
-    const confirm1 = (data) => {
+    function callBack(data, content) {
         let location = (typeof data.location === "object") ? data.location.id : data.location;
         confirmDialog({
             message: 'Are you sure you want to proceed?',
@@ -69,7 +70,7 @@ export default function Employee() {
                         'Authorization': `Bearer ${localStorage.getItem("JWT")}`,
                     },
                     data: JSON.stringify(
-                        { ...data, doB: dayjs(data.doB).toISOString().substring(0, 10), location: location }
+                        { ...data, doB: dayjs(data.doB).toISOString().substring(0, 10), location: location, file: content }
                     )
                     ,
                     CORS: false,
@@ -97,7 +98,10 @@ export default function Employee() {
                 setVisible(false);
             }
         });
+    }
 
+    const confirm1 = (data) => {
+        getContentBase64(data, callBack)
     };
 
     return (
@@ -107,154 +111,173 @@ export default function Employee() {
                     id={id}
                     typeForm={`${typeDialog.toLocaleLowerCase()}`}
                     confirm={confirm1}
-                    listInputs={[{
-                        name: "ID",
-                        valueName: "id",
-                        type: "TextField",
-                        size: 6,
-                        editable: false
-                    }, {
-                        name: "Username",
-                        valueName: "username",
-                        type: "TextField",
-                        size: 6,
-                        editable: true,
-                        rules: {
-                            required: {
-                                value: true,
-                                message: "Can't leave this field blank"
-                            }
-                        }
-                    }, {
-                        name: "Password",
-                        valueName: "password",
-                        type: "TextField",
-                        size: 6,
-                        editable: true,
-                        rules: {
-                            required: {
-                                value: true,
-                                message: "Can't leave this field blank"
+                    listInputs={[
+                        {
+                            name: "Image",
+                            valueName: "imgSrc",
+                            type: "file",
+                            size: { "sm": 12, "lg": 4 },
+                            sx: {
+                                width: "100%"
                             },
-                            pattern: {
-                                value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/,
-                                message: "Minimum eight characters, at least one uppercase letter, one lowercase letter and one number."
-                            }
+                            editable: true,
+                            width: "250px"
+                        }, {
+                            stack: true,
+                            listStacks: [
+                                {
+                                    name: "ID",
+                                    valueName: "id",
+                                    type: "TextField",
+                                    size: 6,
+                                    editable: false
+                                }, {
+                                    name: "Username",
+                                    valueName: "username",
+                                    type: "TextField",
+                                    size: 6,
+                                    editable: true,
+                                    rules: {
+                                        required: {
+                                            value: true,
+                                            message: "Can't leave this field blank"
+                                        }
+                                    }
+                                },
+                                {
+                                    name: "Password",
+                                    valueName: "password",
+                                    type: "TextField",
+                                    size: 6,
+                                    editable: true,
+                                    rules: {
+                                        required: {
+                                            value: (typeDialog.toLocaleLowerCase() === "create") ? true : false,
+                                            message: "Can't leave this field blank"
+                                        },
+                                        pattern: {
+                                            value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/,
+                                            message: "Minimum eight characters, at least one uppercase letter, one lowercase letter and one number."
+                                        }
+                                    }
+                                },
+                                {
+                                    name: "Name",
+                                    valueName: "nameWorker",
+                                    type: "TextField",
+                                    size: 6,
+                                    editable: true,
+                                    rules: {
+                                        required: {
+                                            value: true,
+                                            message: "Can't leave this field blank"
+                                        }
+                                    }
+                                }, {
+                                    name: "Specialities",
+                                    valueName: "specialities",
+                                    type: "TextField",
+                                    size: 6,
+                                    editable: true,
+                                }, {
+                                    name: "Salary",
+                                    valueName: "salary",
+                                    type: "TextField",
+                                    size: 6,
+                                    editable: true,
+                                    number: "float"
+                                }, {
+                                    name: "Rate",
+                                    valueName: "rate",
+                                    type: "TextField",
+                                    size: 4,
+                                    number: "float",
+                                    editable: true
+                                }, {
+                                    name: "Date Of Birth",
+                                    valueName: "doB",
+                                    type: "DateField",
+                                    size: 4,
+                                    editable: true,
+                                    rules: {
+                                        required: {
+                                            value: true,
+                                            message: "Can't leave this field blank"
+                                        }
+                                    }
+                                }, {
+                                    name: "Email",
+                                    valueName: "email",
+                                    type: "TextField",
+                                    size: 4,
+                                    typeEmail: true,
+                                    editable: true,
+                                    rules: {
+                                        pattern: {
+                                            value: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                                            message: "Email Invalid"
+                                        },
+                                        required: {
+                                            value: true,
+                                            message: "Can't leave this field blank"
+                                        }
+                                    }
+                                }, {
+                                    name: "Address",
+                                    valueName: "address",
+                                    type: "TextField",
+                                    size: 6,
+                                    editable: true,
+                                    rules: {
+                                        required: {
+                                            value: true,
+                                            message: "Can't leave this field blank"
+                                        }
+                                    }
+                                }, {
+                                    name: "PhoneNumber",
+                                    valueName: "phoneNumber",
+                                    type: "TextField",
+                                    size: 6,
+                                    editable: true,
+                                    rules: {
+                                        required: {
+                                            value: true,
+                                            message: "Can't leave this field blank"
+                                        }
+                                    }
+                                }, {
+                                    name: "Location",
+                                    valueName: "location",
+                                    type: "Dropdown",
+                                    size: 6,
+                                    editable: true,
+                                    options: options,
+                                    rules: {
+                                        required: {
+                                            value: true,
+                                            message: "Can't leave this field blank"
+                                        }
+                                    }
+                                }, {
+                                    name: "Role",
+                                    valueName: "idRole",
+                                    type: "Dropdown",
+                                    size: 6,
+                                    editable: true,
+                                    options: [{ label: 'EMPLOYEE', value: 'EMPLOYEE' },
+                                    { label: 'MANAGER', value: 'MANAGER' },
+                                    { label: 'ADMIN', value: 'ADMIN' },],
+                                    rules: {
+                                        required: {
+                                            value: true,
+                                            message: "Can't leave this field blank"
+                                        }
+                                    }
+                                },
+                            ],
+                            size: { "sm": 12, "lg": 8 }
                         }
-                    }, {
-                        name: "Name",
-                        valueName: "nameWorker",
-                        type: "TextField",
-                        size: 6,
-                        editable: true,
-                        rules: {
-                            required: {
-                                value: true,
-                                message: "Can't leave this field blank"
-                            }
-                        }
-                    }, {
-                        name: "Specialities",
-                        valueName: "specialities",
-                        type: "TextField",
-                        size: 6,
-                        editable: true,
-                    }, {
-                        name: "Salary",
-                        valueName: "salary",
-                        type: "TextField",
-                        size: 3,
-                        editable: true,
-                        number: "float"
-                    }, {
-                        name: "Rate",
-                        valueName: "rate",
-                        type: "TextField",
-                        size: 3,
-                        number: "float",
-                        editable: true
-                    }, {
-                        name: "Date Of Birth",
-                        valueName: "doB",
-                        type: "DateField",
-                        size: 4,
-                        editable: true,
-                        rules: {
-                            required: {
-                                value: true,
-                                message: "Can't leave this field blank"
-                            }
-                        }
-                    }, {
-                        name: "Email",
-                        valueName: "email",
-                        type: "TextField",
-                        size: 4,
-                        typeEmail: true,
-                        editable: true,
-                        rules: {
-                            pattern: {
-                                value: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-                                message: "Email Invalid"
-                            },
-                            required: {
-                                value: true,
-                                message: "Can't leave this field blank"
-                            }
-                        }
-                    }, {
-                        name: "Address",
-                        valueName: "address",
-                        type: "TextField",
-                        size: 4,
-                        editable: true,
-                        rules: {
-                            required: {
-                                value: true,
-                                message: "Can't leave this field blank"
-                            }
-                        }
-                    }, {
-                        name: "PhoneNumber",
-                        valueName: "phoneNumber",
-                        type: "TextField",
-                        size: 4,
-                        editable: true,
-                        rules: {
-                            required: {
-                                value: true,
-                                message: "Can't leave this field blank"
-                            }
-                        }
-                    }, {
-                        name: "Location",
-                        valueName: "location",
-                        type: "Dropdown",
-                        size: 4,
-                        editable: true,
-                        options: options,
-                        rules: {
-                            required: {
-                                value: true,
-                                message: "Can't leave this field blank"
-                            }
-                        }
-                    }, {
-                        name: "Role",
-                        valueName: "idRole",
-                        type: "Dropdown",
-                        size: 4,
-                        editable: true,
-                        options: [{ label: 'EMPLOYEE', value: 'EMPLOYEE' },
-                        { label: 'MANAGER', value: 'MANAGER' },
-                        { label: 'ADMIN', value: 'ADMIN' },],
-                        rules: {
-                            required: {
-                                value: true,
-                                message: "Can't leave this field blank"
-                            }
-                        }
-                    }
                     ]}
                     link={link + ""}
                 >

@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react'
-import SmallServicePane from '../SmallServicePane';
 import $ from 'jquery'
 import { useState } from 'react';
 import { useInfo } from '../Booking';
@@ -8,32 +7,34 @@ import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css'
 import ServicePane from "../ServicePane/ServicePane.jsx"
+import ComboPane from '../ComboPane/ComboPane.jsx';
 
 export default function ServiceBookingForm() {
 
-    const { data, dataServices, services, changeServicesList } = useInfo();
+    const { dataServices, services, changeServicesList, dataCombos, combos, changeComboList, setPickAtSalonToggle } = useInfo();
     const navigate = useNavigate();
-    const [unload, setUnload] = useState(false);
 
     function totalMoney() {
         var total = 0;
         servicesList.forEach(t => total += t.price);
+        combosList.forEach(t => total += t.price);
         return total;
     }
 
     var servicesList = [];
+    var combosList = [];
 
     services.forEach(element => {
         servicesList.push(element);
     });
 
+    combos.forEach(e => {
+        combosList.push(e);
+    })
 
     useEffect(() => {
-
         if (localStorage.getItem("ReloadService") === "true") {
-            console.log("Redirect");
-            
-            navigate("/booking");
+            navigate(-1);
         }
 
         $(".serviceTable").on('click', ".servicePane", function () {
@@ -41,13 +42,20 @@ export default function ServiceBookingForm() {
             $(this).toggleClass("borderCustom");
         });
 
+        $(".serviceTable").on('click', ".comboPane", function () {
+            changeCombos(($(this).attr("id")));
+            $(this).toggleClass("borderCustom");
+        });
+
         $(".backIcon").on("click", function () {
-            navigate('/booking');
+            navigate(-1);
         });
 
         $(".buttonService").on('click', function () {
             changeServicesList(servicesList);
-            navigate('/booking');
+            changeComboList(combosList);
+            if (servicesList.length !== 0 || combosList !== 0) setPickAtSalonToggle(false)
+            navigate(-1);
         });
 
         if (servicesList.length == 0) {
@@ -82,13 +90,29 @@ export default function ServiceBookingForm() {
         } else {
             $(".buttonService").removeClass("btn-inactive");
         }
-
-
-
-
-        $(".totalServices").html(`You have already booked ${servicesList.length} services/combos`);
+        $(".totalServices").html(`You have already booked ${servicesList.length + combosList.length} services/combos`);
         $(".totalMoney").html(`Payment cost: ${totalMoney()}k VND`);
+    }
 
+    function changeCombos(id) {
+        var index = combosList.findIndex((value) => {
+            return id === value.id;
+        })
+        if (index !== -1) {
+            combosList.splice(index, 1);
+        } else {
+            combosList.push(dataCombos.find((value) => {
+                return id === value.id;
+            }));
+        }
+        if (combosList.length == 0) {
+            if (!$(".buttonService").hasClass("btn-inactive"))
+                $(".buttonService").addClass("btn-inactive");
+        } else {
+            $(".buttonService").removeClass("btn-inactive");
+        }
+        $(".totalServices").html(`You have already booked ${servicesList.length + combosList.length} services/combos`);
+        $(".totalMoney").html(`Payment cost: ${totalMoney()}k VND`);
     }
 
     return (
@@ -97,7 +121,7 @@ export default function ServiceBookingForm() {
                 <div className='LocationChoosingHead'>
                     <FontAwesomeIcon className='backIcon' icon={faArrowLeft} />
                     <h1 className='heading'>Choosing services</h1>
-                    <div className='searchField'>
+                    {/* <div className='searchField'>
                         <div className="input-group mb-0">
                             <input type="text" className="form-control" placeholder="Search by Name"></input>
                             <div className="input-group-append">
@@ -105,7 +129,7 @@ export default function ServiceBookingForm() {
                                     id="button-addon2">Search</button>
                             </div>
                         </div>
-                    </div>
+                    </div> */}
                 </div>
                 <div className='gap'></div>
                 <div className='resultSearch'>
@@ -119,7 +143,23 @@ export default function ServiceBookingForm() {
                                 price={service.price}
                                 isChosen={servicesList.includes(service)}
                             ></ServicePane>
-                        )}
+                        )
+                        }
+                        {
+                            dataCombos.map((combo) =>
+                                <ComboPane
+                                    key={combo.id}
+                                    detail={combo.description}
+                                    imgSrc={combo.imgSrc}
+                                    heading={combo.name}
+                                    id={combo.id}
+                                    price={combo.price}
+                                    isChosen={combosList.includes(combo)}
+                                >
+                                </ComboPane>
+                            )
+                        }
+
 
                     </div>
                 </div>

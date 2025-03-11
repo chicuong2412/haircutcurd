@@ -1,6 +1,6 @@
 /* Nav menu */
 .mainMenu li {
-    padding: 0 !important; 
+    padding: 0 !important;
 }
 
 
@@ -10,6 +10,7 @@
     left: 5%;
     top: 25%;
     cursor: pointer;
+
     img {
         width: 200px;
     }
@@ -24,11 +25,10 @@
     border-radius: 4px;
     margin-top: 10px;
     margin-bottom: 10px;
-    text-align: center;
     color: white;
-    line-height: 30px;
     margin-left: auto;
     margin-right: auto;
+
 }
 
 ul {
@@ -53,7 +53,7 @@ ul {
 }
 
 .mainMenu {
-    display: flex;
+    display: flex !important;
     flex-wrap: wrap;
     justify-content: center;
     width: 100%;
@@ -151,9 +151,27 @@ nav {
     background-color: rgba(0, 0, 0, 0);
 }
 
+@media (max-width: 767.98px) {
 
+    .mainMenu {
+        display: none !important;
+    }
+
+    .mobileMenu {
+        display: block !important;
+    }
+
+    .logo {
+        border-bottom: 1px solid black;
+        padding: 10px;
+    }
+}
 
 @media (min-width: 992px) {
+
+    .mainMenu {
+        display: flex !important;
+    }
 
     .subMenu {
         opacity: 0;
@@ -217,13 +235,34 @@ nav {
         text-decoration: underline !important;
     }
 
-    &:hover .userTab {
-        display: block;
+    
+
+    @media (min-width: 992px) {
+
+        &:hover .userTab {
+            display: block;
+        }
+
+    }
+
+    @media (min-width: 992px) {
+
+        .buttonN {
+            display: none !important;
+        }
+
     }
 }
 
 
+.buttonN {
+    position: absolute;
+    right: 0;
+}
+
 // UserTab
+
+
 
 .userTab {
     position: absolute;
@@ -232,6 +271,8 @@ nav {
     text-align: center;
     width: fit-content;
     padding: 0px 10px 10px 10px !important;
+    left: -20px;
+    // z-index: 9999 !important;
 
     li {
         cursor: pointer;
@@ -241,18 +282,45 @@ nav {
     a {
         text-decoration: none !important;
     }
+
+    a:hover {
+        color: #d69c4a !important;
+    }
+
+    @media (max-width: 767.98px) {
+        display: flex !important;
+        position: relative;
+        flex-direction: column;
+        margin-left: auto;
+        margin-right: auto;
+        left: 0;
+        width: 100%;
+        padding: 0 !important;
+
+        li {
+            border-bottom: #eaeaea solid 1px;
+            margin-bottom: 0;
+        }
+
+        p {
+            margin-bottom: 0;
+        }
+    }
 }
 
 
 @media (max-width: 991.98px) {
 
+    .userTabNone {
+        display: none !important;
+    }
 
     .mainMenu li:has(.megaSubMenu) {
         position: relative;
     }
 
     .mainMenu {
-        display: none;
+        // display: none;
         position: absolute;
         top: 100%;
         background-color: white;
@@ -263,9 +331,11 @@ nav {
 
 
     .buttonOpen {
-        display: block;
+        display: flex;
         margin-top: 16px;
         margin-bottom: 16px;
+        align-items: center;
+        justify-content: center;
     }
 
     .buttonDown {
@@ -282,7 +352,10 @@ nav {
         padding: 0 0;
         margin: 0 0;
         border-bottom: #eaeaea solid 1px;
+        text-align: center;
     }
+
+
 
     .mainMenu .subMenu {
         display: none;
@@ -326,6 +399,13 @@ nav {
     .subMenu li:hover a {
         background-color: white;
         color: black;
+    }
+
+    .logo {
+        position: relative;
+        width: 100%;
+        left: 0;
+        text-align: center;
     }
 }
 

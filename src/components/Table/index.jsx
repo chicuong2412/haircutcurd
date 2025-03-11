@@ -5,9 +5,6 @@ import { AgGridReact } from "ag-grid-react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import "ag-grid-enterprise";
 
-import { useInfo } from '../../layouts/layout';
-
-import { ConfirmDialog } from 'primereact/confirmdialog'; // To use <ConfirmDialog> tag
 import { confirmDialog } from 'primereact/confirmdialog'; // To use confirmDialog method
 
 
@@ -16,6 +13,7 @@ import $ from "jquery"
 import { useNavigate } from 'react-router-dom';
 
 import { memo } from 'react';
+import { useMain } from '../App';
 
 const defaultColDef = {
     sortable: true,
@@ -47,7 +45,7 @@ function setData(link, params) {
 export default memo(function Table({ colDefsIn, link, nameLink, chartField, setTypeDialog, setId, setVisible }) {
     const [colDefs, setColDefs] = useState(colDefsIn);
     const [gridApi, setGridApi] = useState({});
-    const { toast } = useInfo();
+    const { toast } = useMain();
     const [reset, setReset] = useState(0);
 
     const navigate = useNavigate();
@@ -169,7 +167,6 @@ export default memo(function Table({ colDefsIn, link, nameLink, chartField, setT
     
     return (
         <div>
-            <ConfirmDialog></ConfirmDialog>
             <div className={style.container}>
                 <div className={`${style.newButton} ${nameLink}CreateButton`}>
                     <FontAwesomeIcon className={style.iconNew} icon={faPlus} />

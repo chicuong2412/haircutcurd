@@ -3,8 +3,10 @@ import style from './Login.module.scss'
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useMain } from '../App'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import $ from 'jquery'
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 
 function RegisterForm() {
 
@@ -143,7 +145,7 @@ export default function Login() {
             async: false
             ,
             success: function (data) {
-                // console.log(data);
+               
                 if (data.code == 1000 && data.result.authenticated) {
                     setIsLogged(true)
                     localStorage.setItem("username", username);
@@ -170,9 +172,9 @@ export default function Login() {
             setPassword($(this).val())
         })
 
-        $(".createAccount").on('click', function () {
-            navigate("/register");
-        })
+        // $(".createAccount").on('click', function () {
+        //     navigate("/register");
+        // })
     }, [])
 
     return (
@@ -198,13 +200,15 @@ export default function Login() {
                         <label for='password'>Password</label>
                         <input type={(isShowPassword) ? 'text' : 'password'} id='password' className={style.usernameInput}></input>
                         <span className={style.showPasswordIcon} onClick={(event) => handleOnclickShowPassword()}>
-                            <FontAwesomeIcon icon={(isShowPassword) ? faEye : faEyeSlash}></FontAwesomeIcon>
+                            {/* <FontAwesomeIcon icon={(isShowPassword) ? faEye : faEyeSlash}></FontAwesomeIcon>
+                             */}
+                             {(isShowPassword) ? <VisibilityIcon></VisibilityIcon> : <VisibilityOffIcon></VisibilityOffIcon>}
                         </span>
                     </div>
                     <button onClick={(event) => userLoginHandler()} className={style.loginButton}>LOGIN</button>
                     <div className={style.textHold}>
                         <h6 className={style.forgotPassword}><span className='forgotPass'>Forgot passwords?</span></h6>
-                        <h6>Dont have one? <span className='createAccount'>Create new one</span></h6>
+                        <h6>Dont have one? <span className='createAccount'><Link to={"/register"}>Create new one</Link></span></h6>
                     </div>
                     <p className={`${style.errorOutput} errorOutput`}></p>
                 </div>

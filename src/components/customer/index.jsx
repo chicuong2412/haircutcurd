@@ -10,8 +10,9 @@ import $ from "jquery"
 import dayjs from 'dayjs'
 import FormModel from '../Form/FormModel'
 import { confirmDialog } from 'primereact/confirmdialog';
-import { useInfo } from '../../layouts/layout'
 import DialogHeader from '../DialogHeader/DialogHeader'
+import { getContentBase64 } from '../../utils/Functions';
+import { useMain } from '../App';
 
 
 
@@ -21,7 +22,7 @@ export default function Customer() {
     const [visible, setVisible] = useState(false);
     const [typeDialog, setTypeDialog] = useState("View");
 
-    const { toast } = useInfo();
+    const { toast } = useMain();
 
     const headerElement = (Type) => {
         return (
@@ -29,22 +30,25 @@ export default function Customer() {
         );
     }
 
-    const confirm1 = (data) => {
+    function callBack(data, content) {
         confirmDialog({
             message: 'Are you sure you want to proceed?',
             header: 'Confirmation',
             icon: 'pi pi-exclamation-triangle',
             defaultFocus: 'accept',
             accept() {
+                $(".loading").css("display", "flex");
+                console.log($(".loading"));
+                
                 $.ajax({
-                    url: `${link}${(typeDialog === "Edit") ? `/${id}`:""}`,
-                    type: (typeDialog === "Create") ? "POST": "PUT",
+                    url: `${link}${(typeDialog === "Edit") ? `/${id}` : ""}`,
+                    type: (typeDialog === "Create") ? "POST" : "PUT",
                     dataType: 'json',
                     headers: {
                         'Authorization': `Bearer ${localStorage.getItem("JWT")}`,
                     },
                     data: JSON.stringify(
-                        { ...data, doB: dayjs(data.doB).add(1, 'day').toISOString().substring(0, 10) }
+                        { ...data, doB: dayjs(data.doB).add(1, 'day').toISOString().substring(0, 10), file: content }
                     )
                     ,
                     CORS: false,
@@ -60,6 +64,7 @@ export default function Customer() {
                             toast.current.show({ severity: 'error', summary: 'Error', detail: data.message, life: 3000 });
                             setVisible(false);
                         }
+                        $(".loading").css("display", "none")
                     },
                     error: function (data) {
 
@@ -72,7 +77,10 @@ export default function Customer() {
                 setVisible(false);
             }
         });
+    }
 
+    const confirm1 = (data) => {
+        getContentBase64(data, callBack)
     };
 
     return (
@@ -81,74 +89,102 @@ export default function Customer() {
                 <FormModel
                     id={id}
                     typeForm={`${typeDialog.toLocaleLowerCase()}`}
-                    confirm = {confirm1}
-                    listInputs={[{
-                        name: "ID",
-                        valueName: "id",
-                        type: "TextField",
-                        size: 6,
-                        editable: false
-                    }, {
-                        name: "Name",
-                        valueName: "nameCustomer",
-                        type: "TextField",
-                        size: 6,
-                        editable: true
-                    }, {
-                        name: "Username",
-                        valueName: "username",
-                        type: "TextField",
-                        size: 6,
-                        editable: true
-                    }, {
-                        name: "Date Of Birth",
-                        valueName: "doB",
-                        type: "DateField",
-                        size: 6,
-                        editable: true
-                    }, {
-                        name: "Password",
-                        valueName: "password",
-                        type: "TextField",
-                        size: 6,
-                        editable: true,
-                    }, {
-                        name: "Type Customer",
-                        valueName: "typeCustomer",
-                        type: "Dropdown",
-                        size: 6,
-                        options: [{ label: 'None', value: 'None' },
-                        { label: 'Broze', value: 'Broze' },
-                        { label: 'Silver', value: 'Silver' },
-                        { label: 'Gold', value: "Gold" },
-                        { label: 'Platinum', value: "Platinum" }],
-                        editable: true
-                    }, {
-                        name: "Loyalty Point",
-                        valueName: "loyaltyPoint",
-                        type: "TextField",
-                        size: 6,
-                        editable: true,
-                        number: "int"
-                    }, {
-                        name: "Email",
-                        valueName: "email",
-                        type: "TextField",
-                        size: 3,
-                        editable: true
-                    }, {
-                        name: "Phone Number",
-                        valueName: "phoneNumber",
-                        type: "TextField",
-                        size: 3,
-                        editable: true
-                    }, {
-                        name: "Address",
-                        valueName: "address",
-                        type: "TextField",
-                        size: 12,
-                        editable: true
-                    }
+                    confirm={confirm1}
+                    listInputs={[
+                        {
+                            name: "Image",
+                            valueName: "imgSrc",
+                            type: "file",
+                            size: { "sm": 12, "lg": 4 },
+                            sx: {
+                                width: "100%"
+                            },
+                            editable: true,
+                            width: "250px"
+                        },
+                        {
+                            stack: true,
+                            size: { "sm": 12, "lg": 8 },
+                            listStacks: [
+                                {
+                                    name: "ID",
+                                    valueName: "id",
+                                    type: "TextField",
+                                    size: 6,
+                                    editable: false
+                                }, {
+                                    name: "Name",
+                                    valueName: "nameCustomer",
+                                    type: "TextField",
+                                    size: 6,
+                                    editable: true
+                                }, {
+                                    name: "Username",
+                                    valueName: "username",
+                                    type: "TextField",
+                                    size: 6,
+                                    editable: true
+                                }, {
+                                    name: "Date Of Birth",
+                                    valueName: "doB",
+                                    type: "DateField",
+                                    size: 6,
+                                    editable: true
+                                }, {
+                                    name: "Password",
+                                    valueName: "password",
+                                    type: "TextField",
+                                    size: 6,
+                                    rules: {
+                                        required: {
+                                            value: (typeDialog.toLocaleLowerCase() === "create") ? true : false,
+                                            message: "Can't leave this field blank"
+                                        },
+                                        pattern: {
+                                            value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/,
+                                            message: "Minimum eight characters, at least one uppercase letter, one lowercase letter and one number."
+                                        }
+                                    },
+                                    editable: true,
+                                }, {
+                                    name: "Type Customer",
+                                    valueName: "typeCustomer",
+                                    type: "Dropdown",
+                                    size: 6,
+                                    options: [{ label: 'None', value: 'None' },
+                                    { label: 'Broze', value: 'Broze' },
+                                    { label: 'Silver', value: 'Silver' },
+                                    { label: 'Gold', value: "Gold" },
+                                    { label: 'Platinum', value: "Platinum" }],
+                                    editable: true
+                                }, {
+                                    name: "Loyalty Point",
+                                    valueName: "loyaltyPoint",
+                                    type: "TextField",
+                                    size: 3,
+                                    editable: true,
+                                    number: "int"
+                                }, {
+                                    name: "Email",
+                                    valueName: "email",
+                                    type: "TextField",
+                                    size: 5,
+                                    editable: true
+                                }, {
+                                    name: "Phone Number",
+                                    valueName: "phoneNumber",
+                                    type: "TextField",
+                                    size: 4,
+                                    editable: true
+                                }, {
+                                    name: "Address",
+                                    valueName: "address",
+                                    type: "TextField",
+                                    size: 12,
+                                    editable: true
+                                }
+                            ]
+                        }
                     ]}
                     link={"http://localhost:3120/identity/customers"}
                 >

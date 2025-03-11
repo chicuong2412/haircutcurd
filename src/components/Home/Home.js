@@ -9,6 +9,7 @@ import './css/venobox/venobox.css'
 import './css/animate.min.css'
 import './css/barber-icons.css'
 import 'bootstrap/js/dist/carousel'
+import { Link } from 'react-router-dom'
 
 export default function Home() {
     return (
@@ -42,7 +43,7 @@ export default function Home() {
                                     <h3>Its Not Just a Haircut, Its an Experience.</h3>
                                     <h1>Where mens want  <br />to look there very best.</h1>
                                     <p>Our barbershop is the territory created purely for males who appreciate<br /> premium quality, time and flawless look.</p>
-                                    <a href="/booking" className="default_btn">Make Appointment</a>
+                                    <Link to="/booking" className="default_btn">Make Appointment</Link>
                                 </div>
                             </div>
                         </div>
@@ -67,7 +68,7 @@ export default function Home() {
                                 <h2 className="wow">The Barber Shop <br />Science 1991</h2>
                                 <img className="wow logo" src="https://html.dynamiclayers.net/dl/barbershop/img/about-logo.png" alt="logo" />
                                 <p className="wow">Barber is a person whose occupation is mainly to cut dress groom style and shave men's and boys' hair. A barber's place of work is known as a "barbershop" or a "barber's". Barbershops are also places of social interaction and public discourse. In some instances, barbershops are also public forums.</p>
-                                <a href="#" className="default_btn wow">More About Us</a>
+                                {/* <a href="#" className="default_btn wow">More About Us</a> */}
                             </div>
                         </div>
                         <div className="col-md-6 d-none d-md-block">
@@ -255,7 +256,7 @@ export default function Home() {
                             <div className="cta_content align-center wow fadeInUp" data-wow-delay="300ms">
                                 <h2>Making You Look Good <br /> Is In Our Haritage.</h2>
                                 <p>Barber is a person whose occupation is mainly to cut dress groom <br />style and shave men's and boys hair.</p>
-                                <a href="#" className="default_btn">Make Appointment</a>
+                                <Link to="/booking" className="default_btn">Make Appointment</Link>
                             </div>
                         </div>
                     </div>

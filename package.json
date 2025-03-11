@@ -76,6 +76,7 @@
     "ag-grid-react": "^28.1.1",
     "bootstrap": "^5.3.3",
     "dayjs": "^1.11.13",
+    "firebase": "^11.4.0",
     "haircutcurd": "file:../haircutcurd",
     "jquery": "^3.7.1",
     "primeicons": "^7.0.0",

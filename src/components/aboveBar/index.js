@@ -14,10 +14,10 @@ export default function AboveBar() {
         <span className={style.headMenu}>Dashboard</span>
       </div>
 
-      <div className={style.iconsFuntions}>
+      {/* <div className={style.iconsFuntions}>
         <span className={style.notifiction}><FontAwesomeIcon icon={faBell}></FontAwesomeIcon></span>
         <span className={style.avatar}><FontAwesomeIcon icon={faUser}></FontAwesomeIcon></span>
-      </div>
+      </div> */}
     </div>
   )
 }

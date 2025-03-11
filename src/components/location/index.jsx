@@ -7,20 +7,20 @@ import { faPenToSquare, faEye } from '@fortawesome/free-regular-svg-icons';
 import { faX } from '@fortawesome/free-solid-svg-icons';
 import style from "../../styles/FormStyle.module.scss"
 import { confirmDialog } from 'primereact/confirmdialog';
-import { useInfo } from '../../layouts/layout'
 import DialogHeader from '../DialogHeader/DialogHeader'
 import { Dialog } from 'primereact/dialog';
 import FormModel from '../Form/FormModel';
 import $ from 'jquery'
+import { getContentBase64 } from '../../utils/Functions';
+import { useMain } from '../App';
 
 export default function Location() {
     const [id, setId] = useState("");
     const link = "http://localhost:3120/identity/locations"
     const [visible, setVisible] = useState(false);
     const [typeDialog, setTypeDialog] = useState("View");
-    const [options, setOptions] = useState([]);
 
-    const { toast } = useInfo();
+    const { toast } = useMain();
 
     const headerElement = (Type) => {
         return (
@@ -28,8 +28,7 @@ export default function Location() {
         );
     }
 
-    const confirm1 = (data) => {
-        console.log(typeof data.openHour);
+    function callBack(data, content) {
         let openHour = ''
         if (typeof data.openHour === "string") {
             openHour = data.openHour;
@@ -52,7 +51,8 @@ export default function Location() {
                     data: JSON.stringify(
                         {
                             ...data,
-                            openHour: openHour
+                            openHour: openHour,
+                            file: content
                         }
                     )
                     ,
@@ -81,90 +81,94 @@ export default function Location() {
                 setVisible(false);
             }
         });
+    }
 
+    const confirm1 = (data) => {
+        getContentBase64(data, callBack)
     };
     return (
         <>
-            {/* <Route path='/' element={ */}
             <Dialog visible={visible} modal header={headerElement(typeDialog)} style={{ width: '50rem' }} onHide={() => { if (!visible) return; setVisible(false); }}>
                 <FormModel
                     id={id}
                     typeForm={`${typeDialog.toLocaleLowerCase()}`}
                     confirm={confirm1}
-                    listInputs={[{
-                        name: "ID",
-                        valueName: "id",
-                        type: "TextField",
-                        size: 6,
-                        editable: false
-                    }, {
-                        name: "Name",
-                        valueName: "name",
-                        type: "TextField",
-                        size: 6,
-                        editable: true,
-                        rules: {
-                            required: {
-                                value: true,
-                                message: "Can't leave this field blank"
-                            }
+                    listInputs={[
+                        {
+                            name: "ImgSRC",
+                            valueName: "imgSrc",
+                            type: "file",
+                            size: { "sm": 12, "lg": 4 },
+                            editable: true,
+                        }, {
+                            stack: true,
+                            size: { "sm": 12, "lg": 8 },
+                            listStacks: [
+                                {
+                                    name: "ID",
+                                    valueName: "id",
+                                    type: "TextField",
+                                    size: 6,
+                                    editable: false
+                                }, {
+                                    name: "Name",
+                                    valueName: "name",
+                                    type: "TextField",
+                                    size: 6,
+                                    editable: true,
+                                    rules: {
+                                        required: {
+                                            value: true,
+                                            message: "Can't leave this field blank"
+                                        }
+                                    }
+                                }, {
+                                    name: "Address",
+                                    valueName: "address",
+                                    type: "TextField",
+                                    size: 6,
+                                    editable: true,
+                                    rules: {
+                                        required: {
+                                            value: true,
+                                            message: "Can't leave this field blank"
+                                        }
+                                    }
+                                }, {
+                                    name: "Phone number",
+                                    valueName: "phoneNumber",
+                                    type: "TextField",
+                                    size: 6,
+                                    editable: true,
+                                    rules: {
+                                        required: {
+                                            value: true,
+                                            message: "Can't leave this field blank"
+                                        }
+                                    }
+                                }, {
+                                    name: "Email",
+                                    valueName: "email",
+                                    type: "TextField",
+                                    size: 6,
+                                    editable: true,
+                                }, {
+                                    name: "Open Hour",
+                                    valueName: "openHour",
+                                    type: "TimeField",
+                                    size: 6,
+                                    editable: true,
+                                    rules: {
+                                        required: {
+                                            value: true,
+                                            message: "Can't leave this field blank"
+                                        }
+                                    },
+                                    defaultValue: "08:00:00"
+                                },
+                            ]
                         }
-                    }, {
-                        name: "ImgSRC",
-                        valueName: "imgSrc",
-                        type: "TextField",
-                        size: 6,
-                        editable: true,
-                        rules: {
-                            required: {
-                                value: true,
-                                message: "Can't leave this field blank"
-                            }
-                        }
-                    }, {
-                        name: "Address",
-                        valueName: "address",
-                        type: "TextField",
-                        size: 6,
-                        editable: true,
-                        rules: {
-                            required: {
-                                value: true,
-                                message: "Can't leave this field blank"
-                            }
-                        }
-                    }, {
-                        name: "Phone number",
-                        valueName: "phoneNumber",
-                        type: "TextField",
-                        size: 6,
-                        editable: true,
-                        rules: {
-                            required: {
-                                value: true,
-                                message: "Can't leave this field blank"
-                            }
-                        }
-                    }, {
-                        name: "Email",
-                        valueName: "email",
-                        type: "TextField",
-                        size: 6,
-                        editable: true,
-                    }, {
-                        name: "Open Hour",
-                        valueName: "openHour",
-                        type: "TimeField",
-                        size: 6,
-                        editable: true,
-                        rules: {
-                            required: {
-                                value: true,
-                                message: "Can't leave this field blank"
-                            }
-                        },
-                        defaultValue: "08:00:00"
-                    },
+
                     ]}
                     link={link + "/getLocation"}
                 >
@@ -205,10 +209,5 @@ export default function Location() {
             ></Table>
 
         </>
-        //         }></Route>
-        //     <Route path='/view/*' element={<LocationForm></LocationForm>}></Route>
-        //     <Route path='/create/*' element={<LocationCreateForm></LocationCreateForm>}></Route>
-        //     <Route path='/edit/*' element={<EditingLocationForm></EditingLocationForm>}></Route>
-        // </Routes>
     )
 }

@@ -12,6 +12,10 @@
         margin-top: 20px;
         // transform: translateY(50%);
 
+        @media (max-width: 767.98px) {
+            width: 80%;
+        }
+
         button {
             background-color: #d69c4a;
             border: none;
@@ -72,6 +76,8 @@
             right: 15px;
             top: 50%;
             cursor: pointer;
+            display: flex;
+            align-items: center;
         }
 
         .textHold {

@@ -7,11 +7,12 @@ import { faPenToSquare, faEye } from '@fortawesome/free-regular-svg-icons';
 import { faX } from '@fortawesome/free-solid-svg-icons';
 import style from "../../styles/FormStyle.module.scss"
 import { confirmDialog } from 'primereact/confirmdialog';
-import { useInfo } from '../../layouts/layout'
 import DialogHeader from '../DialogHeader/DialogHeader'
 import { Dialog } from 'primereact/dialog';
 import FormModel from '../Form/FormModel';
 import $ from 'jquery'
+import { getContentBase64 } from '../../utils/Functions';
+import { useMain } from '../App';
 
 
 export default function Service() {
@@ -22,7 +23,7 @@ export default function Service() {
     const [typeDialog, setTypeDialog] = useState("View");
     const [options, setOptions] = useState([]);
 
-    const { toast } = useInfo();
+    const { toast } = useMain();
 
     const headerElement = (Type) => {
         return (
@@ -51,7 +52,7 @@ export default function Service() {
         })
     }, []);
 
-    const confirm1 = (data) => {
+    function callBack(data, content) {
         let productList = [];
         data.productsList?.map((item) => {
             productList.push(item.id);
@@ -72,7 +73,8 @@ export default function Service() {
                     data: JSON.stringify(
                         {
                             ...data,
-                            productsList: productList
+                            productsList: productList,
+                            file: content
                         }
                     )
                     ,
@@ -101,7 +103,10 @@ export default function Service() {
                 setVisible(false);
             }
         });
+    }
 
+    const confirm1 = (data) => {
+        getContentBase64(data, callBack)
     };
 
     return (
@@ -111,91 +116,94 @@ export default function Service() {
                     id={id}
                     typeForm={`${typeDialog.toLocaleLowerCase()}`}
                     confirm={confirm1}
-                    listInputs={[{
-                        name: "ID",
-                        valueName: "id",
-                        type: "TextField",
-                        size: 6,
-                        editable: false
-                    }, {
-                        name: "Name",
-                        valueName: "name",
-                        type: "TextField",
-                        size: 6,
-                        editable: true,
-                        rules: {
-                            required: {
-                                value: true,
-                                message: "Can't leave this field blank"
-                            }
+                    listInputs={[
+                        {
+                            name: "ImgSRC",
+                            valueName: "imgSrc",
+                            type: "file",
+                            size: { "sm": 12, "lg": 4 },
+                        },
+                        {
+                            stack: true,
+                            size: { "sm": 12, "lg": 8 },
+                            listStacks: [
+                                {
+                                    name: "ID",
+                                    valueName: "id",
+                                    type: "TextField",
+                                    size: 6,
+                                    editable: false
+                                }, {
+                                    name: "Name",
+                                    valueName: "name",
+                                    type: "TextField",
+                                    size: 6,
+                                    editable: true,
+                                    rules: {
+                                        required: {
+                                            value: true,
+                                            message: "Can't leave this field blank"
+                                        }
+                                    }
+                                }, {
+                                    name: "Description",
+                                    valueName: "description",
+                                    type: "TextField",
+                                    size: 6,
+                                    editable: true,
+                                    rules: {
+                                        required: {
+                                            value: true,
+                                            message: "Can't leave this field blank"
+                                        }
+                                    }
+                                }, {
+                                    name: "Duration",
+                                    valueName: "duration",
+                                    type: "TextField",
+                                    size: 6,
+                                    number: "int",
+                                    editable: true,
+                                    rules: {
+                                        required: {
+                                            value: true,
+                                            message: "Can't leave this field blank"
+                                        }
+                                    }
+                                }, {
+                                    name: "Rate",
+                                    valueName: "rate",
+                                    type: "TextField",
+                                    size: 6,
+                                    editable: true,
+                                    number: "float",
+                                    defaultValue: 0
+                                }, {
+                                    name: "Price",
+                                    valueName: "price",
+                                    type: "TextField",
+                                    size: 6,
+                                    number: "int",
+                                    editable: true,
+                                    rules: {
+                                        required: {
+                                            value: true,
+                                            message: "Can't leave this field blank"
+                                        }
+                                    }
+                                },
+
+                            ]
+                        },
+                        {
+                            name: "Product List",
+                            valueName: "productsList",
+                            type: "list",
+                            size: 12,
+                            options: options,
+                            editable: true,
+                            defaultValue: []
                         }
-                    }, {
-                        name: "ImgSRC",
-                        valueName: "imgSrc",
-                        type: "TextField",
-                        size: 6,
-                        editable: true,
-                        rules: {
-                            required: {
-                                value: true,
-                                message: "Can't leave this field blank"
-                            }
-                        }
-                    }, {
-                        name: "Description",
-                        valueName: "description",
-                        type: "TextField",
-                        size: 6,
-                        editable: true,
-                        rules: {
-                            required: {
-                                value: true,
-                                message: "Can't leave this field blank"
-                            }
-                        }
-                    }, {
-                        name: "Duration",
-                        valueName: "duration",
-                        type: "TextField",
-                        size: 4,
-                        number: "int",
-                        editable: true,
-                        rules: {
-                            required: {
-                                value: true,
-                                message: "Can't leave this field blank"
-                            }
-                        }
-                    }, {
-                        name: "Rate",
-                        valueName: "rate",
-                        type: "TextField",
-                        size: 4,
-                        editable: true,
-                        number: "float",
-                        defaultValue: 0
-                    }, {
-                        name: "Price",
-                        valueName: "price",
-                        type: "TextField",
-                        size: 4,
-                        number: "int",
-                        editable: true,
-                        rules: {
-                            required: {
-                                value: true,
-                                message: "Can't leave this field blank"
-                            }
-                        }
-                    },
-                    {
-                        name: "Product List",
-                        valueName: "productsList",
-                        type: "list",
-                        size: 12,
-                        options: options,
-                        editable: true
-                    }
                     ]}
                     link={link + "/getServiceByID"}
                 >
@@ -234,42 +242,6 @@ export default function Service() {
                 setVisible={setVisible}
                 setTypeDialog={setTypeDialog}
             ></Table>
-
         </>
-        /* <Routes>
-            <Route path='/' element={<Table
-                colDefsIn={[
-                    { headerName: "ID", field: "id", resizable: true },
-                    { field: "name", resizable: true },
-                    { field: "imgSrc", resizable: true },
-                    { headerName: "Duration", field: "duration" },
-                    { field: "description", resizable: true },
-                    { field: "price" },
-                    { field: "rate" },
-                    { headerName: "Products", field: "products", cellRendererFramework: (params) => <div className='center'>{params.data.productsList.length}</div> },
-                    {
-                        headerName: "Deleted", field: "deleted", cellRendererFramework: (params) =>
-                            <Checkbox disabled checked={params.data.deleted}></Checkbox>
-                    },
-                    {
-                        headerName: "Function", field: "id", cellRendererFramework: (params) => {
-                            return (
-                                <div className={style.buttonFunctions}>
-                                    <FontAwesomeIcon icon={faPenToSquare} dataid={params.value} className='edit' />
-                                    <FontAwesomeIcon icon={faEye} dataid={params.value} className='view' />
-                                    <FontAwesomeIcon icon={faX} dataid={params.value} className='delete' />
-                                </div>
-                            )
-                        }
-                    }
-                ]}
-                link={"http://localhost:3120/identity/services/getAllServices"}
-                nameLink={"services"}
-                chartField={["id", "duration", "price", "rate"]}
-            ></Table>}></Route> */
-        /* <Route path='/view/*' element={<ServiceForm></ServiceForm>}></Route>
-                <Route path='/create/*' element={<ServiceCreateForm></ServiceCreateForm>}></Route>
-                <Route path='/edit/*' element={<EditingServiceForm></EditingServiceForm>}></Route> */
-        // </Routes>
     )
 }

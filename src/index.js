@@ -18,6 +18,7 @@ import ReactDOM from 'react-dom'
 // Import our top-level component.
 import App from './components/App'
 
+// const analytics = getAnalytics(app);
 
 // Mount our app.
 ReactDOM.render(

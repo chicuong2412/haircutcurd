@@ -9,20 +9,14 @@ import EmployeePage from '../pages/EmployeePage'
 import ProductPage from '../pages/ProductPage'
 import ServicePage from '../pages/ServicePage'
 import $ from "jquery"
-import { Toast } from 'primereact/toast'
-import { useRef } from "react"
 import CustomerPage from '../pages/CustomerPage'
 import Combo from '../components/combo'
 import LocationPage from '../pages/LocationPage'
 
-const MenuChosen = React.createContext();
 
 export default function Layout() {
-
-    const [menuItem, setMenuItem] = React.useState(0);
     var [flagMenu, setFlagMenu] = React.useState(false);
 
-    const toast = useRef(null);
 
 
     React.useEffect(() => {
@@ -43,8 +37,7 @@ export default function Layout() {
     }, []);
 
     return (
-        <MenuChosen.Provider value={{ menuItem, setMenuItem, toast }}>
-            <Toast ref={toast}></Toast>
+        <>
             <div className='layoutContainer'>
                 <div className='leftSide' style={{ display: `${(flagMenu) ? "block" : "none"}` }}>
                     <Menu></Menu>
@@ -58,8 +51,6 @@ export default function Layout() {
                         {
                             (localStorage.getItem("ROLE").includes("ADMIN") ?
                                 <Routes>
-                                    <Route path='/myinfo'></Route>
-                                    <Route path='/' element={<Navigate to={"myinfo"}></Navigate>}></Route>
                                     <Route path='/appointments/*' element={<AppointmentPage />}></Route>
                                     <Route path='/workers/*' element={<EmployeePage />}></Route>
                                     <Route path='/combos/*' element={<Combo />}></Route>
@@ -70,7 +61,6 @@ export default function Layout() {
                                 </Routes> : ((localStorage.getItem("ROLE").includes("MANAGER") ? <>
                                     <Routes>
                                         <Route path='/myinfo'></Route>
-                                        <Route path='/' element={<Navigate to={"myinfo"}></Navigate>}></Route>
                                         <Route path='/appointments/*' element={<AppointmentPage />}></Route>
                                         <Route path='/workers/*' element={<EmployeePage />}></Route>
                                     </Routes>
@@ -79,8 +69,6 @@ export default function Layout() {
                     </div>
                 </div>
             </div>
-        </MenuChosen.Provider>
+        </>
     )
 }
-
-export const useInfo = () => React.useContext(MenuChosen);

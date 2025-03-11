@@ -7,12 +7,12 @@ import { faPenToSquare, faEye } from '@fortawesome/free-regular-svg-icons';
 import { faX } from '@fortawesome/free-solid-svg-icons';
 import style from "../../styles/FormStyle.module.scss"
 import { confirmDialog } from 'primereact/confirmdialog';
-import { useInfo } from '../../layouts/layout'
 import DialogHeader from '../DialogHeader/DialogHeader'
 import { Dialog } from 'primereact/dialog';
 import FormModel from '../Form/FormModel';
 import $ from 'jquery'
 import dayjs from 'dayjs';
+import { useMain } from '../App';
 
 export default function Appointment() {
     const [id, setId] = useState("");
@@ -25,7 +25,7 @@ export default function Appointment() {
     const [optionCustomers, setOptionCustomers] = useState([]);
     const [optionLocations, setOptionLocations] = useState([]);
 
-    const { toast } = useInfo();
+    const { toast } = useMain();
 
     const headerElement = (Type) => {
         return (
@@ -144,6 +144,7 @@ export default function Appointment() {
             icon: 'pi pi-exclamation-triangle',
             defaultFocus: 'accept',
             accept() {
+                $(".loading").css("display", "flex");
                 $.ajax({//${(typeDialog === "Edit") ? `/${id}` : ""}
                     url: `${link}`,
                     type: (typeDialog === "Create") ? "POST" : "PUT",
@@ -177,6 +178,7 @@ export default function Appointment() {
                             setVisible(false);
                             setId("");
                         }
+                        $(".loading").css("display", "none")
                     },
                     error: function (data) {
                         console.log(data);
@@ -195,8 +197,6 @@ export default function Appointment() {
 
     };
     return (
-        // <Routes>
-        //     <Route path='/' element={
         <>
             <Dialog visible={visible} modal header={headerElement(typeDialog)} style={{ width: '50rem' }} onHide={() => { if (!visible) return; setVisible(false); }}>
                 <FormModel
@@ -347,9 +347,5 @@ export default function Appointment() {
                 setTypeDialog={setTypeDialog}
             ></Table>
         </>
-        //     }></Route>
-        //     <Route path='/view/*' element={<AppointmentForm></AppointmentForm>}></Route>
-        //     <Route path='/create/*' element={<CreateFormAppointment></CreateFormAppointment>}></Route>
-        // </Routes>
     )
 }
