@@ -1,0 +1,66 @@
+.servicePane {
+    position: relative;
+    width: 48%;
+    height: fit-content;
+    min-height: 340px;
+    --tw-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.1);
+    --tw-shadow-colored: 0px 2px 10px 0px var(--tw-shadow-color);
+    box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+    border-radius: 10px;
+    transition: border 0.1s;
+
+    .info {
+        padding: 5px;
+        height: 100%;
+        min-height: 100%;
+    }
+
+    .picture {
+        max-width: 100%;
+        border-top-right-radius: 10px;
+        border-top-left-radius: 10px;
+    }
+
+    .heading {
+        font-size: 14px !important;
+        padding: 0px;
+    }
+
+    .detail {
+        font-size: 12px;
+        line-height: 14px;
+        color: rgb(127, 128, 129);
+    }
+
+    .price {
+        font-size: 1rem;
+        text-align: center;
+    }
+
+
+    .chooseBtn {
+        width: calc(100% - 10px);
+        height: 35px;
+        background-color: #d69c4a;
+        font-weight: 600;
+        text-transform: uppercase;
+        border-radius: 5px;
+        color: white;
+        position: absolute;
+        bottom: 5px;
+    }
+
+    .chooseBtn:hover {
+        background-color: white;
+        color: #d69c4a;
+    }
+
+    @media (max-width: 991.98px) {
+       
+    }
+}
+
+.servicePane:hover {
+    border: 3px solid rgb(145, 118, 90);
+    
+}

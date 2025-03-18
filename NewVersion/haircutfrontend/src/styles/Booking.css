@@ -1,0 +1,339 @@
+@import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css");
+
+.Wrapper {
+    background-color: rgb(229, 231, 235);
+}
+
+
+
+body {
+    background-color: rgb(229, 231, 235);
+}
+
+.clickChangeForm {
+    cursor: pointer;
+}
+
+.clickChangeForm:focus {
+    border: 1px solid #dee2e6;
+    border-left: none;
+}
+
+.noBorderSearch {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.container-Booking {
+    padding-top: 50px;
+    background-color: rgb(245, 238, 231);
+    background-image: url("../images/20.jpg");
+    position: relative;
+    background-size: contain;
+    padding-bottom: 15px;
+}
+
+.container-Booking::before {
+    position: absolute;
+    content: " ";
+    width: 100%;
+    height: calc(100% + 50px);
+    background-color: black;
+    opacity: 0.5;
+    z-index: 2;
+    top: -50px;
+}
+
+.holdMainInfo .input-group {}
+
+
+/* 
+
+.headingPane {
+    position: relative;
+    background-image: url(https://demo.harutheme.com/shang/wp-content/themes/shang/framework/admin-assets/images/theme-options/bg-page-title.jpg);
+}
+.headingPane::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.siteName {
+    font-family: "Playfair Display";
+    font-weight: 700;
+    font-size: 36px;
+    color: #fff;
+    text-align: center;
+    padding-top: 5%;
+    position: relative;
+    z-index: 30;
+}
+
+
+.breadcrumbBoard {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    font-size: 24px;
+    padding-bottom: 70px;
+    z-index: 30;
+    position: relative;
+}
+
+.breadcrumb-item a {
+    color: #fff !important;
+    text-decoration: none;
+} */
+
+.breadcrumb-item.active {
+    color: rgb(145, 118, 90) !important;
+}
+
+.input-group>input {
+    border-left: none;
+    background-color: #F7F7F7 !important;
+}
+
+.stepStyle {
+    font-size: 20px;
+    color: rgb(145, 118, 90);
+    margin-bottom: 10px;
+    font-weight: 700;
+    /* text-transform: uppercase; */
+}
+
+.input-group-text {
+    background-color: #F7F7F7;
+    border-right: none;
+}
+
+
+.holdMainInfo {
+    width: 40rem;
+    background-color: white;
+    padding: 15px 30px;
+    height: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+    z-index: 9;
+}
+
+.resultSearch {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.table {
+    width: fit-content;
+}
+
+.gap {
+    height: 20px;
+    width: 100%;
+}
+
+/* Holding main form */
+
+.stepStyle {}
+
+.holdingStep {
+    position: relative;
+}
+
+.tick {
+    display: flex;
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background-color: rgb(145, 118, 90);
+    top: 3px;
+    left: -25px;
+    border-radius: 100%;
+    justify-content: center;
+    align-items: center;
+    color: white;
+}
+
+.leftLine {
+    display: block;
+    width: 3px;
+    height: 0;
+    background-color: rgb(145, 118, 90);
+    position: absolute;
+    left: -16px;
+    top: 22px;
+}
+
+.aleartEdit {
+    position: fixed !important;
+    top: 67px;
+    right: 30px;
+    z-index: 99999999;
+    display: none;
+}
+
+/* Location */
+
+
+.LocationForm .heading,
+.LocationChoosingHead .heading {
+    color: rgb(145, 118, 90);
+    font-size: 24px;
+    font-weight: 700;
+    text-align: center;
+
+}
+
+.LocationForm::before {
+    content: '';
+}
+
+.backIcon {
+    font-size: 34px;
+    position: absolute;
+}
+
+.holdFormServices {
+    width: 40rem;
+    background-color: #f5eee7;
+    padding: 15px;
+    height: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.serviceTable {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+@media (max-width: 991.98px) {
+
+    .ServicesForm {
+        width: 100%;
+    }
+
+    .holdFormServices {
+        width: 100%;
+    }
+
+    .holdMainInfo {
+        width: 100% !important;
+    }
+
+    .holdMainInfoStylist {
+        width: 100% !important;
+    }
+
+}
+
+.holdMainInfoStylist {
+    width: 40rem;
+    background-color: white;
+    padding: 15px;
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+    z-index: 10;
+}
+
+.stylistTable {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    flex-direction: row;
+    margin-top: 10px;
+    overflow: hidden;
+}
+
+
+/* Button affix */
+.button-affix {
+    position: sticky;
+    background-color: white;
+    bottom: 0;
+    z-index: 9;
+    width: 40rem;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0px 30px;
+    padding-top: 20px;
+}
+
+.button-affix .button-next {
+    height: 48px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+    cursor: pointer;
+    background: rgb(145, 118, 90);
+    color: white;
+}
+
+
+@media (max-width: 991.98px) {
+    .button-affix {
+        width: 100%;
+    }
+}
+
+.btn-inactive {
+    background: #e8e8e8 !important;
+    color: #767676 !important;
+}
+
+.borderCustom {
+    border: 3px solid rgb(145, 118, 90);
+}
+
+.borderCustom::after {
+    content: "\f00c";
+    font-family: FontAwesome;
+    display: flex;
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    z-index: 10px;
+    border-radius: 100px;
+    top: -10px;
+    right: -10px;
+    color: white;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(145, 118, 90);
+}
+
+.serviceFinalContainer {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.totalServices {}
+
+.totalMoney {
+    text-align: right !important;
+    margin-left: auto;
+}
+
+.buttonService {
+    height: 48px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+    cursor: pointer;
+    background: rgb(145, 118, 90);
+    color: white;
+    width: 100%;
+}

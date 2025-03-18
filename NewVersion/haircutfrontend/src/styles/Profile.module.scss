@@ -1,0 +1,54 @@
+.profileContainer {
+    width: 60%;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: white;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    padding: 20px 10px 20px 10px;
+    position: relative;
+
+    .typeCustomer {
+        margin-left: 20px;
+
+        // > * {
+        //     padding: 10px !important;
+        // }
+    }
+
+    .editProfile {
+        margin-top: 10px;
+        padding: 10px 20px;
+        font-size: 16px;
+    }
+
+    button {
+        background-color: #9e8a78;
+        color: #fff;
+        font-family: "Work Sans", sans-serif;
+        font-size: 12px;
+        font-weight: 600;
+        line-height: 50px;
+        display: inline-block;
+        padding: 0 40px;
+        cursor: pointer;
+        transition: all 0.5s ease-in-out;
+        right: 0;
+        position: relative;
+        display: flex;
+        justify-self: right;
+        // margin-bottom: 20px;
+        border-radius: 5px;
+    }
+
+    @media (max-width: 600px) {
+        width: 100%;
+    }
+}
+
+.changePass {
+    display: flex;
+    padding: 10px 5px;
+    justify-content: right;
+}

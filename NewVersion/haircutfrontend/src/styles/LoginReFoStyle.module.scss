@@ -1,0 +1,38 @@
+.container {
+    background-color: rgb(236, 243, 247);
+    height: 100vh;
+
+    .holder {
+        width: 30rem;
+        margin-left: auto;
+        margin-right: auto;
+        position: relative;
+        top: 20%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        background-color: white;
+        border-radius: 10px;
+        padding: 30px 50px 60px 50px;
+        gap: 30px;
+
+        h1 {
+            margin: 0;
+            font-size: 48px;
+        }
+
+        h6 {
+            margin: 0;
+            font-size: 0.875rem;
+            font-weight: 400;
+            color: rgb(90, 106, 133);
+        }
+
+        .colFull {
+            width: 100%;
+        }
+    }
+
+    
+
+}
