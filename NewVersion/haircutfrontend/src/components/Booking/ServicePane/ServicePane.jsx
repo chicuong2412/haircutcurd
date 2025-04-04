@@ -10,7 +10,7 @@ export default function ServicePane(serviceNode) {
 
     return (
         <div className={`${style.servicePane} servicePane ${(serviceNode.isChosen) ? "borderCustom": ""}`} id={serviceNode.id}>
-            <img referrerPolicy='no-referrer' className={style.picture} src={serviceNode.imgSrc}></img>
+            <img referrerPolicy='no-referrer' className={style.picture} src={serviceNode.imgSrc} loading='lazy'></img>
             <div className= {style.info}>
                 <h2 className={style.heading}><FontAwesomeIcon className={style.icon} icon={faRulerCombined} /> {serviceNode.heading}</h2>
                 <p className={style.detail}>{serviceNode.detail}</p>

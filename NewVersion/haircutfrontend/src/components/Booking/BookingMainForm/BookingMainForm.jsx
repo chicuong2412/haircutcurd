@@ -54,7 +54,7 @@ function BookingMainForm() {
             $(".leftLine.1").css("height", height);
             $(".clickChangeForm.2").attr("accessFlag", "true")
         }
-        
+
         if (pickAtSalonToggle == false && services.length == 0) {
             $(".tick.2").hide();
             $(".leftLine.2").hide();
@@ -129,12 +129,19 @@ function BookingMainForm() {
                         <span className="input-group-text" id="basic-addon1"><FontAwesomeIcon icon={faScissors} /></span>
                         <input type="text" datapage="step2" accessFlag={"false"} className="form-control clickChangeForm 2" placeholder="Click to choose" readOnly></input>
                     </div>
-                    <FormControlLabel control={<Switch checked={pickAtSalonToggle} onChange={() => {
+                    <FormControlLabel control={<Switch sx={{
+                        "& .MuiSwitch-switchBase.Mui-checked": {
+                            color: "#9e8a78",
+                        },
+                        "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
+                            backgroundColor: "#9e8a78",
+                        },
+                    }} checked={pickAtSalonToggle} onChange={() => {
                         setPickAtSalonToggle(!pickAtSalonToggle)
                         changeServicesList([])
                         changeComboList([])
-                    }} />} 
-                    label="Pick services/combos at salon"></FormControlLabel>
+                    }} />}
+                        label="Pick services/combos at salon"></FormControlLabel>
 
                     <div className='listServices'>
                         {services.map((value) =>

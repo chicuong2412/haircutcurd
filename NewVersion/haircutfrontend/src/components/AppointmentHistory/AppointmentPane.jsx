@@ -31,7 +31,7 @@ function Card({ data, setExpanded, cancel }) {
             <p><FontAwesomeIcon icon={faUser} /> <span className={style.title}>{(localStorage.getItem("ROLE").includes("CUSTOMER") ? "Sylist" : "Customer")} name: </span>{(localStorage.getItem("ROLE").includes("CUSTOMER") ? data.worker.nameWorker : data.customer.nameCustomer)}</p>
             <p><FontAwesomeIcon icon={faCircle} /> <span className={style.title}>Status: </span>{data.status}</p>
             {/* {(data.status !== "CANCELLED" ? (<p><FontAwesomeIcon icon={faPenToSquare}></FontAwesomeIcon> Click here to change</p>) : <></>)} */}
-            {(data.status !== "CANCELLED" ? (<p onClick={() => {
+            {((data.status !== "CANCELLED" && localStorage.getItem("ROLE").includes("CUSTOMER")) ? (<p onClick={() => {
                 cancel(data.id)
             }} className={style.cancelButton}><FontAwesomeIcon icon={faBan}></FontAwesomeIcon></p>) : <></>)}
             <span onClick={setExpanded} className={style.expandButton}><FontAwesomeIcon icon={faUpRightAndDownLeftFromCenter} /></span>
@@ -57,7 +57,7 @@ function ExpanedCard({ data, setExpanded, cancel }) {
             <p><FontAwesomeIcon icon={faUser} /> <span className={style.title}>{(localStorage.getItem("ROLE").includes("CUSTOMER") ? "Sylist" : "Customer")} name: </span>{(localStorage.getItem("ROLE").includes("CUSTOMER") ? data.customer.nameCustomer : data.worker.nameWorker)}</p>
             <p><FontAwesomeIcon icon={faCircle} /> <span className={style.title}>Status: </span>{data.status}</p>
             {/* {(data.status !== "CANCELLED" ? (<p><FontAwesomeIcon icon={faPenToSquare}></FontAwesomeIcon> Click here to change</p>) : <></>)} */}
-            {(data.status !== "CANCELLED" ? (<p onClick={() => {
+            {((data.status !== "CANCELLED" && localStorage.getItem("ROLE").includes("CUSTOMER")) ? (<p onClick={() => {
                 cancel(data.id)
             }} className={style.cancelButton}><FontAwesomeIcon icon={faBan}></FontAwesomeIcon></p>) : <></>)}
 

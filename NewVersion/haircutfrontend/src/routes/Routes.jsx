@@ -30,27 +30,39 @@ export default function RoutesDirection() {
                                 <Routes>
                                     <Route index path='/dashboard/*' element={<Layout></Layout>}></Route>
                                     <Route index path='/*' element={<LayoutLogged><HomePage></HomePage></LayoutLogged>}></Route>
-                                    <Route path='/booking/*' element={<LayoutLogged><Booking></Booking></LayoutLogged>}></Route>
                                     <Route path='/profile/*' element={<LayoutLogged><ProfilePage></ProfilePage></LayoutLogged>}></Route>
                                     <Route path='/appointments/*' element={<LayoutLogged><AppointmentHistory></AppointmentHistory></LayoutLogged>}></Route>
                                     <Route path='/changepassword' element={<LayoutLogged><ChangePasswordPage></ChangePasswordPage></LayoutLogged>}></Route>
                                     <Route path='/services' element={<LayoutLogged><ServicesCarPage></ServicesCarPage></LayoutLogged>}></Route>
                                     <Route path='/login' element={<Navigate to={"/"}></Navigate>}></Route>
                                     <Route path='/register' element={<Navigate to={"/"}></Navigate>}></Route>
+                                    <Route path='/booking/*' element={<Navigate to={"/"}></Navigate>}></Route>
                                 </Routes>
-                            </> :
-                            <>
-                                <Routes>
-                                    <Route path='/*' element={<LayoutLogged><HomePage></HomePage></LayoutLogged>}></Route>
-                                    <Route path='/booking/*' element={<LayoutLogged><Booking></Booking></LayoutLogged>}></Route>
-                                    <Route path='/profile/*' element={<LayoutLogged><ProfilePage></ProfilePage></LayoutLogged>}></Route>
-                                    <Route path='/appointments/*' element={<LayoutLogged><AppointmentHistory></AppointmentHistory></LayoutLogged>}></Route>
-                                    <Route path='/changepassword' element={<LayoutLogged><ChangePasswordPage></ChangePasswordPage></LayoutLogged>}></Route>
-                                    <Route path='/services' element={<LayoutLogged><ServicesCarPage></ServicesCarPage></LayoutLogged>}></Route>
-                                    <Route path='/login' element={<Navigate to={"/"}></Navigate>}></Route>
-                                    <Route path='/register' element={<Navigate to={"/"}></Navigate>}></Route>
-                                </Routes>
-                            </>
+                            </> : (role.includes("WORKER")) ?
+                                <>
+                                    <Routes>
+                                        <Route path='/*' element={<LayoutLogged><HomePage></HomePage></LayoutLogged>}></Route>
+                                        <Route path='/profile/*' element={<LayoutLogged><ProfilePage></ProfilePage></LayoutLogged>}></Route>
+                                        <Route path='/appointments/*' element={<LayoutLogged><AppointmentHistory></AppointmentHistory></LayoutLogged>}></Route>
+                                        <Route path='/changepassword' element={<LayoutLogged><ChangePasswordPage></ChangePasswordPage></LayoutLogged>}></Route>
+                                        <Route path='/services' element={<LayoutLogged><ServicesCarPage></ServicesCarPage></LayoutLogged>}></Route>
+                                        <Route path='/login' element={<Navigate to={"/"}></Navigate>}></Route>
+                                        <Route path='/register' element={<Navigate to={"/"}></Navigate>}></Route>
+                                        <Route path='/booking/*' element={<Navigate to={"/"}></Navigate>}></Route>
+
+                                    </Routes>
+                                </> : <>
+                                    <Routes>
+                                        <Route path='/*' element={<LayoutLogged><HomePage></HomePage></LayoutLogged>}></Route>
+                                        <Route path='/booking/*' element={<LayoutLogged><Booking></Booking></LayoutLogged>}></Route>
+                                        <Route path='/profile/*' element={<LayoutLogged><ProfilePage></ProfilePage></LayoutLogged>}></Route>
+                                        <Route path='/appointments/*' element={<LayoutLogged><AppointmentHistory></AppointmentHistory></LayoutLogged>}></Route>
+                                        <Route path='/changepassword' element={<LayoutLogged><ChangePasswordPage></ChangePasswordPage></LayoutLogged>}></Route>
+                                        <Route path='/services' element={<LayoutLogged><ServicesCarPage></ServicesCarPage></LayoutLogged>}></Route>
+                                        <Route path='/login' element={<Navigate to={"/"}></Navigate>}></Route>
+                                        <Route path='/register' element={<Navigate to={"/"}></Navigate>}></Route>
+                                    </Routes>
+                                </>
                     }
                 </> : <>
                     <Routes>

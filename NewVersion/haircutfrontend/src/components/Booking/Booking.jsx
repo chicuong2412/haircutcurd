@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { lazy, Suspense, useMemo } from 'react'
 import { createContext, useEffect, useState } from 'react';
 import BookingMainForm from './BookingMainForm/BookingMainForm';
 import { useContext } from 'react';
@@ -12,13 +12,15 @@ import dayjs from 'dayjs';
 import { confirmDialog } from 'primereact/confirmdialog';
 import { Toast } from 'primereact/toast';
 import { useMain } from '../App';
+// const BookingMainForm = lazy(() => import('./BookingMainForm/BookingMainForm'))
+// const LocationChoosing = lazy(() => import('./LocationChoosing/LocationChoosing'))
 
 
 const BookingInfo = createContext()
 
 export default function Booking() {
 
-    const {toast} = useMain();
+    const { toast } = useMain();
 
     const [location, setLocation] = useState();
     var [services, setServices] = useState([]);
@@ -176,9 +178,10 @@ export default function Booking() {
     return (
         <>
             <Toast ref={toast} />
-            <BookingInfo.Provider value={{ dataServices, services, changeServicesList, dataCombos, combos, changeComboList , location, changeLocation, stylist, setStylist, dateTime, setDateTime, dataStylist, changeStylist, dataLocation, nameStylist, confirmRequest, pickAtSalonToggle, setPickAtSalonToggle }}>
+            <BookingInfo.Provider value={{ dataServices, services, changeServicesList, dataCombos, combos, changeComboList, location, changeLocation, stylist, setStylist, dateTime, setDateTime, dataStylist, changeStylist, dataLocation, nameStylist, confirmRequest, pickAtSalonToggle, setPickAtSalonToggle }}>
                 <div className='container-Booking'>
                     <Routes>
+
                         <Route path='/' element={<BookingMainForm></BookingMainForm>}></Route>
                         <Route path='/step1' element={<LocationChoosing></LocationChoosing>}></Route>
                         <Route path='/step2' element={<ServiceBookingForm></ServiceBookingForm>}></Route>

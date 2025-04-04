@@ -8,6 +8,11 @@
     cursor: pointer;
 }
 
+.navPublic {
+    position: sticky;
+    top: 0;
+}
+
 @media (max-width: 767.98px) {
     .notiIcon {
         position: absolute;

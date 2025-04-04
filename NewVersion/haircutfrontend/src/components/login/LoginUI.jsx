@@ -207,8 +207,14 @@ export default function Login() {
                     </div>
                     <button onClick={(event) => userLoginHandler()} className={style.loginButton}>LOGIN</button>
                     <div className={style.textHold}>
-                        <h6 className={style.forgotPassword}><span className='forgotPass'>Forgot passwords?</span></h6>
-                        <h6>Dont have one? <span className='createAccount'><Link to={"/register"}>Create new one</Link></span></h6>
+                        <h6 className={style.forgotPassword}><span className='forgotPass'><Link style={{
+                            textDecoration: "none",
+                            color: "black"
+                        }} to={"/changepassword"}>Forgot passwords?</Link></span></h6>
+                        <h6>Dont have one? <span className='createAccount'><Link style={{
+                            textDecoration: "none",
+                            color: "black"
+                        }} to={"/register"}>Create new one</Link></span></h6>
                     </div>
                     <p className={`${style.errorOutput} errorOutput`}></p>
                 </div>

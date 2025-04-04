@@ -24,7 +24,7 @@ export default function Menu() {
   }, []);
 
   return (
-    < nav className={style.menuSide} >
+    <nav className={style.menuSide} >
       <div className={style.logoDashBoard}>
         <img className='logoDashBoard' src={logo}></img>
       </div>
@@ -42,11 +42,14 @@ export default function Menu() {
             <NavLink to={"locations"} className={({ isActive }) => `${style.menuItem} ${(isActive) ? style.active : ""}`}><span className={style.iconMenu}><FontAwesomeIcon icon={faLocationDot} /></span>Locations</NavLink>
           </>}
           <li className={`${style.menuItem} loggout`} typenode="function"><span className={style.iconMenu}><FontAwesomeIcon icon={faRightFromBracket} /></span>Log out</li>
-          <li id='backToHome'><Link to='/' style={{
+          <li id='backToHome' style={{
+            textAlign: "center"
+          }}><Link to='/' style={{
             textDecoration: "none",
+            
           }}>Back to home</Link></li>
         </ul>
       }
-    </nav >
+    </nav>
   )
 }
