@@ -53,6 +53,10 @@ ul {
   background-color: #d49a4c !important;
 }
 
+.p-picklist-buttons {
+  gap: 5px !important;
+}
+
 input[type="password"]::-ms-reveal,
 input[type="password"]::-ms-clear {
   display: none;
@@ -207,7 +211,8 @@ input[type="password"]::-webkit-credentials-auto-fill-button {
 
   .mobileButtonClose {
     display: block !important;
-    bottom: 25%;
+    bottom: 100%;
+    left: 30%;
   }
 
 

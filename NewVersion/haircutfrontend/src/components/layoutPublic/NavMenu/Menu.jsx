@@ -17,7 +17,10 @@ function NavMenu({ backgroundWhite, positionFixed }) {
 
 
     return (
-        <nav className={navClassName} >
+        <nav className={navClassName} style={{
+            position: "sticky",
+            top: "0"
+        }} >
             <div className={style.logo}>
                 <img onClick={() => navigate("/")} src='https://demo.harutheme.com/shang/wp-content/themes/shang/framework/admin-assets/images/theme-options/logo.png' />
             </div>
@@ -29,7 +32,7 @@ function NavMenu({ backgroundWhite, positionFixed }) {
                 <li>
                     <Link to='/'>Home</Link>
                 </li>
-                <li><Link to='/booking'>Services</Link>
+                <li><Link to='/services'>Services</Link>
 
                 </li>
                 <li className={style.loginAndRe}><Link to={"/login"}>Login</Link>/<Link to='/register'>Register</Link></li>

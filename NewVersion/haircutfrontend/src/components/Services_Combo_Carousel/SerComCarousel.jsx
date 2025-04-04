@@ -16,10 +16,11 @@ export default function SerComCarousel({ list }) {
     }, []);
 
     const ServicePane = (serviceNode) => {
+        
         return (
             <div className={`${style.servicePane} servicePane ${(serviceNode.isChosen) ? "borderCustom" : ""}`} id={serviceNode.id}>
                 <div className={style.holder}>
-                    <img referrerPolicy='no-referrer' className={style.picture} src={serviceNode.imgSrc}></img>
+                    <img loading='lazy' referrerPolicy='no-referrer' className={style.picture} src={serviceNode.imgSrc}></img>
                     <div className={style.info}>
                         <h2 className={style.heading}><FontAwesomeIcon className={style.icon} icon={faRulerCombined} /> {serviceNode.name}</h2>
                         <p className={style.detail}>{serviceNode.description}</p>

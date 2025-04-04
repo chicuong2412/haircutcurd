@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef, useMemo } from 'react'
 import $ from 'jquery'
 import { useState } from 'react';
 import { useInfo } from '../Booking';
@@ -14,6 +14,8 @@ export default function ServiceBookingForm() {
     const { dataServices, services, changeServicesList, dataCombos, combos, changeComboList, setPickAtSalonToggle } = useInfo();
     const navigate = useNavigate();
 
+    const [searchField, setSearchField] = useState("");
+
     function totalMoney() {
         var total = 0;
         servicesList.forEach(t => total += t.price);
@@ -23,6 +25,22 @@ export default function ServiceBookingForm() {
 
     var servicesList = [];
     var combosList = [];
+
+    const dataServiceSearch = useMemo(
+        () => {
+            return [...dataServices].filter((service) => {
+                return service.name.toLowerCase().includes(searchField.toLowerCase())
+                    || searchField === ""
+            })
+        }, [searchField, dataServices])
+
+    const dataComboSearch = useMemo(
+        () => {
+            return [...dataCombos].filter((combo) => {
+                return combo.name.toLowerCase().includes(searchField.toLowerCase())
+                    || searchField === ""
+            })
+        }, [searchField, dataCombos])
 
     services.forEach(element => {
         servicesList.push(element);
@@ -94,6 +112,12 @@ export default function ServiceBookingForm() {
         $(".totalMoney").html(`Payment cost: ${totalMoney()}k VND`);
     }
 
+    const ref = useRef(null)
+
+    const searching = () => {
+        setSearchField(ref.current.value)
+    }
+
     function changeCombos(id) {
         var index = combosList.findIndex((value) => {
             return id === value.id;
@@ -121,20 +145,26 @@ export default function ServiceBookingForm() {
                 <div className='LocationChoosingHead'>
                     <FontAwesomeIcon className='backIcon' icon={faArrowLeft} />
                     <h1 className='heading'>Choosing services</h1>
-                    {/* <div className='searchField'>
+                    <div className='searchField'>
                         <div className="input-group mb-0">
-                            <input type="text" className="form-control" placeholder="Search by Name"></input>
+                            <input ref={ref} onKeyDown={(e) => {
+                                if (e.key === "Enter") {
+                                    searching();
+                                }
+                            }} type="text" className="form-control" placeholder="Search by Name"></input>
                             <div className="input-group-append">
                                 <button className="btn btn-outline-secondary noBorderSearch" type="button"
-                                    id="button-addon2">Search</button>
+                                    id="button-addon2" onClick={() => {
+                                        searching()
+                                    }}>Search</button>
                             </div>
                         </div>
-                    </div> */}
+                    </div>
                 </div>
                 <div className='gap'></div>
                 <div className='resultSearch'>
                     <div className='serviceTable'>
-                        {dataServices.map((service) =>
+                        {dataServiceSearch.map((service) =>
                             <ServicePane key={service.id}
                                 detail={service.description}
                                 imgSrc={service.imgSrc}
@@ -146,7 +176,7 @@ export default function ServiceBookingForm() {
                         )
                         }
                         {
-                            dataCombos.map((combo) =>
+                            dataComboSearch.map((combo) =>
                                 <ComboPane
                                     key={combo.id}
                                     detail={combo.description}
